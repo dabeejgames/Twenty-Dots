@@ -1,7 +1,7 @@
 import React from "react";
 
 // This will use GameCard if passed as prop, else fallback to a basic Card
-function DefaultCard({ card, width, height, fontSize }) {
+function DefaultCard({ card, width, height, fontSize, onClick, isActive, disabled }) {
   if (!card) return (
     <div style={{
       width, height,
@@ -19,22 +19,27 @@ function DefaultCard({ card, width, height, fontSize }) {
     yellow: "#f7e34e"
   };
   return (
-    <div style={{
-      width,
-      height,
-      background: colorMap[card.color] || "#eee",
-      color: "#fff",
-      borderRadius: 9,
-      fontWeight: 700,
-      fontSize,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      textShadow: "1px 2px 5px #0002",
-      marginRight: 3,
-      marginLeft: 2,
-      boxShadow: "0 1px 6px #0001"
-    }}>
+    <div
+      onClick={!disabled && isActive && onClick ? onClick : undefined}
+      style={{
+        width,
+        height,
+        background: colorMap[card.color] || "#eee",
+        color: "#fff",
+        borderRadius: 9,
+        fontWeight: 700,
+        fontSize,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        textShadow: "1px 2px 5px #0002",
+        marginRight: 3,
+        marginLeft: 2,
+        boxShadow: "0 1px 6px #0001",
+        cursor: !disabled && isActive && onClick ? "pointer" : "default",
+        opacity: disabled ? 0.6 : 1
+      }}
+    >
       {card.row && card.col
         ? `${card.row}${card.col}`
         : card.color === "yellow" ? "?" : ""}
