@@ -1,0 +1,21 @@
+.discard-piles {
+  display: flex;
+  gap: 12px;
+  margin: 8px 0;
+}
+.discard-pile {
+  width: 60px;
+  height: 90px;
+  border-radius: 10px;
+  border: 2px dashed #bbb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+}
+.discard-placeholder {
+  width: 56px;
+  height: 86px;
+  border-radius: 8px;
+  background: #eee;
+}
