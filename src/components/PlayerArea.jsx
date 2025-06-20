@@ -1,48 +1,42 @@
 import React from "react";
+import "./Card.css"; // Make sure to create/import this CSS file for modern card styles
 
-// This will use GameCard if passed as prop, else fallback to a basic Card
-function DefaultCard({ card, width, height, fontSize, onClick, isActive, disabled }) {
+// Modern Card component
+function ModernCard({ card, width, height, fontSize, isActive, disabled }) {
   if (!card) return (
-    <div style={{
-      width, height,
-      background: "#f7f7f7",
-      border: "2px dashed #ddd",
-      borderRadius: 9,
-      display: "inline-block"
-    }} />
-  );
-  const colorMap = {
-    red: "#e74c3c",
-    blue: "#3498db",
-    green: "#2ecc71",
-    purple: "#a259d9",
-    yellow: "#f7e34e"
-  };
-  return (
     <div
-      onClick={!disabled && isActive && onClick ? onClick : undefined}
+      className="player-card-modern"
       style={{
         width,
         height,
-        background: colorMap[card.color] || "#eee",
-        color: "#fff",
-        borderRadius: 9,
-        fontWeight: 700,
-        fontSize,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        textShadow: "1px 2px 5px #0002",
-        marginRight: 3,
-        marginLeft: 2,
-        boxShadow: "0 1px 6px #0001",
-        cursor: !disabled && isActive && onClick ? "pointer" : "default",
-        opacity: disabled ? 0.6 : 1
+        opacity: 0.35,
+        background: "#f7f7f7",
+        border: "2px dashed #ddd",
+        color: "#bbb",
+        display: "inline-block"
       }}
+    />
+  );
+
+  // Card color class (matches Card.css)
+  const colorClass = card.color ? ` ${card.color}` : "";
+  return (
+    <div
+      className={`player-card-modern${colorClass}`}
+      style={{
+        width,
+        height,
+        fontSize,
+        opacity: disabled ? 0.65 : 1,
+        cursor: disabled ? "default" : "pointer",
+        boxShadow: isActive && !disabled ? "0 2px 10px #3498db33" : undefined,
+        transition: "box-shadow 0.18s, transform 0.13s",
+        margin: "0 5px"
+      }}
+      tabIndex={disabled ? -1 : 0}
+      aria-disabled={disabled}
     >
-      {card.row && card.col
-        ? `${card.row}${card.col}`
-        : card.color === "yellow" ? "?" : ""}
+      {card.row}{card.col}
     </div>
   );
 }
@@ -58,11 +52,8 @@ export default function PlayerArea({
   cardFontSize = "1.1em",
   cardWidth = 68,
   cardHeight = 75,
-  GameCard, // upgraded card component (from App)
   style = {},
 }) {
-  const Card = GameCard || DefaultCard;
-
   return (
     <div
       className={`player-area ${isAI ? "player-ai" : "player-human"}`}
@@ -88,39 +79,39 @@ export default function PlayerArea({
       }}>
         {player.name}
       </div>
-     {showHand && (
-  <div
-    className="player-hand"
-    style={{
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "center",
-      gap: 7,
-      marginBottom: 0,
-      marginTop: 2
-    }}
-  >
-    {player.hand.map((card, idx) => (
-      <span
-        key={idx}
-        style={{ display: "inline-block" }}
-        onClick={isActive && onCardClick ? () => onCardClick(idx) : undefined}
-        tabIndex={isActive && onCardClick ? 0 : -1}
-        role={isActive && onCardClick ? "button" : undefined}
-        aria-disabled={!isActive}
-      >
-        <DefaultCard
-          card={card}
-          width={cardWidth}
-          height={cardHeight}
-          fontSize={cardFontSize}
-          isActive={isActive}
-          disabled={!isActive}
-        />
-      </span>
-    ))}
-  </div>
-)}
+      {showHand && (
+        <div
+          className="player-hand"
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            gap: 7,
+            marginBottom: 0,
+            marginTop: 2
+          }}
+        >
+          {player.hand.map((card, idx) => (
+            <span
+              key={idx}
+              style={{ display: "inline-block" }}
+              onClick={isActive && onCardClick ? () => onCardClick(idx) : undefined}
+              tabIndex={isActive && onCardClick ? 0 : -1}
+              role={isActive && onCardClick ? "button" : undefined}
+              aria-disabled={!isActive}
+            >
+              <ModernCard
+                card={card}
+                width={cardWidth}
+                height={cardHeight}
+                fontSize={cardFontSize}
+                isActive={isActive}
+                disabled={!isActive}
+              />
+            </span>
+          ))}
+        </div>
+      )}
       <div
         className="player-discards"
         style={{
@@ -134,7 +125,7 @@ export default function PlayerArea({
       >
         {discardPiles && discardPiles.length > 0
           ? discardPiles.map((card, idx) => (
-            <Card
+            <ModernCard
               card={card}
               width={cardWidth - 14}
               height={cardHeight - 14}
@@ -144,8 +135,8 @@ export default function PlayerArea({
             />
           ))
           : <>
-            <Card width={cardWidth - 14} height={cardHeight - 14} fontSize={"0.92em"} disabled={true} />
-            <Card width={cardWidth - 14} height={cardHeight - 14} fontSize={"0.92em"} disabled={true} />
+            <ModernCard width={cardWidth - 14} height={cardHeight - 14} fontSize={"0.92em"} disabled={true} />
+            <ModernCard width={cardWidth - 14} height={cardHeight - 14} fontSize={"0.92em"} disabled={true} />
           </>
         }
       </div>

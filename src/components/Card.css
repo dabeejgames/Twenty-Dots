@@ -1,51 +1,22 @@
-.card {
-  width: 60px;
-  height: 90px;
+.player-card-modern {
   border-radius: 10px;
-  border: 2px solid #999;
-  box-shadow: 1px 2px 4px rgba(0,0,0,0.10);
-  margin: 0 6px;
+  background: linear-gradient(160deg, #f8fbff 0%, #e7f1ff 100%);
+  box-shadow: 0 2px 8px #284b6e28, 0 1.5px 4px #0002;
+  font-weight: 700;
+  font-size: 1.14em;
+  color: #fff;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: 'Trebuchet MS', Arial, sans-serif;
-  font-size: 1.5em;
-  position: relative;
+  border: none;
+  transition: box-shadow 0.18s, transform 0.13s;
   cursor: pointer;
-  transition: transform 0.1s;
-  background: #fff; /* fallback */
+  outline: none;
+  user-select: none;
 }
-
-.card.selected {
-  box-shadow: 0 0 8px 2px #4b9cff;
-  transform: scale(1.07);
-}
-
-.card-red {
-  background: #ef3b3b !important;
-  border-color: #ef3b3b !important;
-  color: #fff !important;
-}
-.card-blue {
-  background: #2b71e7 !important;
-  border-color: #2b71e7 !important;
-  color: #fff !important;
-}
-.card-green {
-  background: #33c34e !important;
-  border-color: #33c34e !important;
-  color: #fff !important;
-}
-.card-purple {
-  background: #b45cff !important;
-  border-color: #b45cff !important;
-  color: #fff !important;
-}
-
-.card-location {
-  font-weight: bold;
-  font-size: 2em;
-  color: inherit;
-  text-shadow: 1px 1px 2px #0003;
-}
+.player-card-modern.red    { background: linear-gradient(155deg, #f66 0%, #e74c3c 93%); }
+.player-card-modern.green  { background: linear-gradient(150deg, #7fffb0 0%, #2ecc71 90%); }
+.player-card-modern.purple { background: linear-gradient(150deg, #c59fff 0%, #a259d9 90%); }
+.player-card-modern.blue   { background: linear-gradient(150deg, #90c6ff 0%, #3498db 92%); }
+.player-card-modern.yellow { background: linear-gradient(150deg, #fffabf 0%, #f7e34e 92%); color: #715c13; }
+.player-card-modern:active { box-shadow: 0 4px 16px #0000002c; transform: scale(0.98); }
