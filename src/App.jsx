@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import SinglePlayerApp from "./SinglePlayerApp";
 import MultiplayerApp from "./MultiplayerApp";
-import BackgroundDots from "./components/BackgroundDots"; // <<--- Add this import
 
 function ModeSelectScreen({ onSingle, onMulti }) {
   return (
