@@ -88,33 +88,39 @@ export default function PlayerArea({
       }}>
         {player.name}
       </div>
-      {showHand && (
-        <div
-          className="player-hand"
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            gap: 7,
-            marginBottom: 0,
-            marginTop: 2
-          }}
-        >
-          {player.hand.map((card, idx) => (
-            <span key={idx} style={{ display: "inline-block" }}>
-              <Card
-                card={card}
-                width={cardWidth}
-                height={cardHeight}
-                fontSize={cardFontSize}
-                isActive={isActive}
-                onClick={onCardClick ? () => onCardClick(idx) : undefined}
-                disabled={!isActive}
-              />
-            </span>
-          ))}
-        </div>
-      )}
+     {showHand && (
+  <div
+    className="player-hand"
+    style={{
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      gap: 7,
+      marginBottom: 0,
+      marginTop: 2
+    }}
+  >
+    {player.hand.map((card, idx) => (
+      <span
+        key={idx}
+        style={{ display: "inline-block" }}
+        onClick={isActive && onCardClick ? () => onCardClick(idx) : undefined}
+        tabIndex={isActive && onCardClick ? 0 : -1}
+        role={isActive && onCardClick ? "button" : undefined}
+        aria-disabled={!isActive}
+      >
+        <DefaultCard
+          card={card}
+          width={cardWidth}
+          height={cardHeight}
+          fontSize={cardFontSize}
+          isActive={isActive}
+          disabled={!isActive}
+        />
+      </span>
+    ))}
+  </div>
+)}
       <div
         className="player-discards"
         style={{
