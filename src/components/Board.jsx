@@ -28,24 +28,40 @@ export default function Board({
   cellSize = 36,
   style = {},
 }) {
+  // Board grid size calculations:
+  const borderSpacing = 4;
+  const padding = 10;
+  const cellCount = ROWS.length;
+  // The table's content height = cellCount * cellSize + (cellCount - 1) * borderSpacing
+  const tableContentHeight = cellCount * cellSize + (cellCount - 1) * borderSpacing;
+  // The outer .board-root height = tableContentHeight + padding*2
+  const boardHeight = tableContentHeight + padding * 2;
+
   return (
     <div
       className="board-root"
       style={{
-        display: "inline-block",
-        padding: 10,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center", // Vertically center the table inside the board box
+        alignItems: "center",     // Horizontally center the table
+        padding: padding,
         background: "rgba(255,255,255,0.92)",
         borderRadius: 20,
         boxShadow: "0 2px 12px #20305b22",
+        minHeight: boardHeight,
+        minWidth: 330,
         ...style,
       }}
     >
       <table
         style={{
           borderCollapse: "separate",
-          borderSpacing: 4,
-          margin: "0 auto",
+          borderSpacing: borderSpacing,
+          margin: 0,
           userSelect: "none",
+          width: "auto",
+          height: tableContentHeight,
         }}
       >
         <thead>
