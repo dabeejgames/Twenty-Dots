@@ -1,22 +1,142 @@
 import React, { useState } from "react";
-import SinglePlayerApp from "./SinglePlayerApp";
-import MultiplayerApp from "./MultiplayerApp";
+import TwentyDotsLogo from "./components/TwentyDotsLogo";
+import BackgroundDots from "./components/BackgroundDots";
+import Board from "./components/Board";
+import PlayerArea from "./components/PlayerArea";
+import Dice from "./components/Dice";
+import Scoreboard from "./components/Scoreboard";
+import TutorialModal from "./components/TutorialModal";
+import { MultiplayerProvider, useMultiplayer } from "./MultiplayerProvider";
+import RoomJoiner from "./RoomJoiner";
+import "./App.css";
 
-export default function App() {
-  const [gameMode, setGameMode] = useState("");
+function GameInterface({ onBack }) {
+  const {
+    connected,
+    roomId,
+    numPlayers,
+    joinRoom,
+    sendGameAction,
+    gameActions,
+    playerIndex,
+    players,
+    gameState,
+    boardState,
+    hand,
+    activePlayer,
+    winner,
+    discardPiles,
+    dice,
+    showTutorial,
+    setShowTutorial,
+  } = useMultiplayer();
 
-  if (!gameMode) {
-    return (
-      <div className="mode-select-screen">
-        <button onClick={() => setGameMode("ai")}>Play vs AI</button>
-        <button onClick={() => setGameMode("multiplayer")}>Play Multiplayer</button>
+  const [mode, setMode] = useState("easy");
+
+  return (
+    <div className="app-content">
+      <TutorialModal open={showTutorial} onClose={() => setShowTutorial(false)} />
+      <button
+        aria-label="Show tutorial"
+        className="help-btn"
+        title="Show game tutorial"
+        onClick={() => setShowTutorial(true)}
+      >?</button>
+      <button className="back-btn" onClick={onBack}>Back</button>
+      <div className="header-bar">
+        <TwentyDotsLogo />
+        <div className="mode-selector-row">
+          Mode:
+          <button
+            className={`mode-btn ${mode === "easy" ? "active" : ""}`}
+            onClick={() => setMode("easy")}
+          >
+            Easy
+          </button>
+          <button
+            className={`mode-btn ${mode === "hard" ? "active" : ""}`}
+            onClick={() => setMode("hard")}
+          >
+            Hard
+          </button>
+        </div>
       </div>
-    );
-  }
-  if (gameMode === "ai") {
-    return <SinglePlayerApp onBack={() => setGameMode("")} />;
-  }
-  if (gameMode === "multiplayer") {
-    return <MultiplayerApp onBack={() => setGameMode("")} />;
-  }
+      <RoomJoiner
+        joinRoom={joinRoom}
+        connected={connected}
+        roomId={roomId}
+        numPlayers={numPlayers}
+      />
+      <div className="scoreboard-row">
+        <Scoreboard players={players} />
+      </div>
+      <div className="game-main">
+        <div className="dice-side">
+          <Dice
+            dice={dice}
+            gameState={gameState}
+            sendGameAction={sendGameAction}
+            activePlayer={activePlayer}
+            playerIndex={playerIndex}
+            mode={mode}
+          />
+          {winner && (
+            <div className="fancy-winner">
+              <span className="winner-text">{winner} wins! <span className="confetti-emoji" role="img" aria-label="confetti">🎉</span></span>
+            </div>
+          )}
+        </div>
+        <div className="main-area">
+          <Board
+            boardState={boardState}
+            activePlayer={activePlayer}
+            playerIndex={playerIndex}
+            sendGameAction={sendGameAction}
+            gameState={gameState}
+            mode={mode}
+          />
+          <div className="player-hand-row">
+            {(hand || []).map((card, idx) =>
+              card ? (
+                <div key={idx} className={`player-card player-card-${card.color}`}>
+                  {card.row}{card.col}
+                </div>
+              ) : (
+                <div key={idx + "empty"} className="player-card player-card-empty"> </div>
+              )
+            )}
+          </div>
+        </div>
+        <div className="player-areas-section">
+          <PlayerArea
+            player={players[0]}
+            isActive={activePlayer === 0 && gameState === "playing"}
+            discardPile={discardPiles[0]}
+            mode={mode}
+          />
+          <PlayerArea
+            player={players[1]}
+            isActive={activePlayer === 1 && gameState === "playing"}
+            discardPile={discardPiles[1]}
+            isAI={players[1]?.isAI}
+            mode={mode}
+          />
+        </div>
+      </div>
+      <footer className="app-footer">
+        <span>Made with <span className="emoji">💡</span> by dabeejgames &amp; Copilot</span>
+      </footer>
+    </div>
+  );
+}
+
+export default function MultiplayerApp({ onBack }) {
+  return (
+    <MultiplayerProvider>
+      <div className="app-root dots-bg">
+        <BackgroundDots />
+        <GameInterface onBack={onBack} />
+      </div>
+    </MultiplayerProvider>
+  );
 }
