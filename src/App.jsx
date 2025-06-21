@@ -21,7 +21,7 @@ function ModeSelectScreen({ onSingle, onMulti }) {
       }}
     >
       <div style={{
-        fontFamily: "'Permanent Marker', 'Comic Sans MS', cursive, sans-serif",
+        fontFamily: "'Permanent Marker', cursive",
         fontSize: "2.4em",
         fontWeight: 900,
         color: "#191919",

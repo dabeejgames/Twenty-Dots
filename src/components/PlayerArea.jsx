@@ -85,10 +85,13 @@ export default function PlayerArea({
           style={{
             display: "flex",
             flexDirection: "row",
-            justifyContent: "center",
+            justifyContent: "flex-start",
             gap: 7,
             marginBottom: 0,
-            marginTop: 2
+            marginTop: 2,
+            overflowX: "auto",        // Makes the hand scrollable horizontally on small screens
+            maxWidth: "100vw",        // Ensures it doesn't overflow viewport
+            padding: "0 5px",         // Some breathing room
           }}
         >
           {player.hand.map((card, idx) => (

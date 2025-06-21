@@ -1,22 +1,50 @@
 .player-card-modern {
+  background: linear-gradient(135deg, #fff 70%, #e2eefd 100%);
   border-radius: 10px;
-  background: linear-gradient(160deg, #f8fbff 0%, #e7f1ff 100%);
-  box-shadow: 0 2px 8px #284b6e28, 0 1.5px 4px #0002;
+  box-shadow: 0 2px 7px #0002;
+  border: 2px solid #d7eaff;
+  padding: 10px 0 6px 0;
+  min-width: 44px;
+  min-height: 50px;
+  width: 68px;
+  height: 75px;
+  font-size: 1.1em;
   font-weight: 700;
-  font-size: 1.14em;
-  color: #fff;
+  color: #2b71e7;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: none;
-  transition: box-shadow 0.18s, transform 0.13s;
+  margin: 0 2px;
+  user-select: none;
+  transition: box-shadow 0.16s, border-color 0.16s, background 0.16s;
   cursor: pointer;
   outline: none;
-  user-select: none;
 }
-.player-card-modern.red    { background: linear-gradient(155deg, #f66 0%, #e74c3c 93%); }
-.player-card-modern.green  { background: linear-gradient(150deg, #7fffb0 0%, #2ecc71 90%); }
-.player-card-modern.purple { background: linear-gradient(150deg, #c59fff 0%, #a259d9 90%); }
-.player-card-modern.blue   { background: linear-gradient(150deg, #90c6ff 0%, #3498db 92%); }
-.player-card-modern.yellow { background: linear-gradient(150deg, #fffabf 0%, #f7e34e 92%); color: #715c13; }
-.player-card-modern:active { box-shadow: 0 4px 16px #0000002c; transform: scale(0.98); }
+
+.player-card-modern[aria-disabled="true"] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.player-card-modern:active,
+.player-card-modern:focus {
+  box-shadow: 0 6px 16px #2b71e722;
+  border-color: #3498db;
+}
+
+.player-card-modern.selected {
+  border-color: #27ae60;
+  background: linear-gradient(135deg, #e8ffe8 70%, #d7ffd9 100%);
+  color: #27ae60;
+}
+
+/* Responsive: Shrink cards on mobile */
+@media (max-width: 600px) {
+  .player-card-modern {
+    width: 44px !important;
+    height: 50px !important;
+    font-size: 0.95em !important;
+    padding: 7px 0 4px 0 !important;
+  }
+}
