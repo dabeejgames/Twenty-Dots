@@ -412,6 +412,8 @@ export default function SinglePlayerApp({ onBack }) {
           boxShadow: "0 2px 6px #0002"
         }} onClick={() => setShowTutorial(true)}>?</button>
       </div>
+      {/* Show the tutorial modal */}
+      <TutorialModal open={showTutorial} onClose={handleCloseTutorial} />
       <TwentyDotsLogo style={{ margin: "0 0 2px 0" }} />
 
       {/* Scoreboard & Mode */}
@@ -478,6 +480,25 @@ export default function SinglePlayerApp({ onBack }) {
           >Hard</button>
         </div>
       </div>
+
+      {/* Hard mode win condition message */}
+      {mode === "hard" && (
+        <div style={{
+          marginTop: 6,
+          marginBottom: 0,
+          fontWeight: 600,
+          fontSize: "1em",
+          color: "#a259d9",
+          background: "#f6f2ff",
+          borderRadius: 7,
+          padding: "5px 14px",
+          textAlign: "center",
+          boxShadow: "0 1px 4px #a259d933",
+          letterSpacing: "0.5px"
+        }}>
+          Get <b>5 of each color</b> to win
+        </div>
+      )}
 
       {/* Board area */}
       <div style={{
@@ -569,7 +590,7 @@ export default function SinglePlayerApp({ onBack }) {
           flexShrink: 0,
         }}
       >
-        <span>Made by dabeejgames</span>
+        <span>Made with <span className="emoji">💡</span> by dabeejgames & Copilot</span>
       </footer>
     </div>
   );
