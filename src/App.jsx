@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import SinglePlayerApp from "./SinglePlayerApp";
 import MultiplayerApp from "./MultiplayerApp";
-import BackgroundDots from "./components/BackgroundDots"; // <<--- Add this import
+import BackgroundDots from "./components/BackgroundDots";
 
 function ModeSelectScreen({ onSingle, onMulti }) {
   return (
@@ -73,7 +73,8 @@ export default function App() {
 
   return (
     <>
-      <BackgroundDots />
+      {/* Only show the background on gameplay screens */}
+      {screen !== "menu" && <BackgroundDots />}
       {screen === "menu" && (
         <ModeSelectScreen
           onSingle={() => setScreen("single")}
