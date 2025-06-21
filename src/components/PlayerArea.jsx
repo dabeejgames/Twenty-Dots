@@ -64,7 +64,7 @@ export default function PlayerArea({
         padding: "8px 5px 13px 5px",
         margin: "0 auto",
         width: "100%",
-        maxWidth: 195,
+        // REMOVE maxWidth restriction for mobile friendliness
         minHeight: 100,
         textAlign: "center",
         ...style
@@ -89,9 +89,9 @@ export default function PlayerArea({
             gap: 7,
             marginBottom: 0,
             marginTop: 2,
-            overflowX: "auto",        // Makes the hand scrollable horizontally on small screens
-            maxWidth: "100vw",        // Ensures it doesn't overflow viewport
-            padding: "0 5px",         // Some breathing room
+            overflowX: "auto",
+            maxWidth: "100vw",
+            padding: "0 5px",
           }}
         >
           {player.hand.map((card, idx) => (
