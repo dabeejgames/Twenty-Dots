@@ -30,7 +30,7 @@ export default function Board({
 }) {
   // Board grid size calculations:
   const borderSpacing = 4;
-  const padding = 10;
+  const padding = 15;
   const cellCount = ROWS.length;
   // The table's content height = cellCount * cellSize + (cellCount - 1) * borderSpacing
   const tableContentHeight = cellCount * cellSize + (cellCount - 1) * borderSpacing;
