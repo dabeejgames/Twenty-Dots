@@ -552,7 +552,7 @@ export default function SinglePlayerApp({ onBack }) {
             flexDirection: "column",
             alignItems: "center",
             minWidth: isMobile ? 50 : 70,
-            marginTop: isMobile ? 32 : 48, // Dice section is LOWERED
+            marginTop: isMobile ? 38 : 48, // Dice section is LOWERED
             gap: 4,
           }}>
             <Dice
