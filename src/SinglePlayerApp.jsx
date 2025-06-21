@@ -441,11 +441,41 @@ export default function SinglePlayerApp({ onBack }) {
           background: "#fff", borderRadius: 11, padding: "3px 8px", marginLeft: 2,
           fontWeight: 600, fontSize: "0.93em", color: "#191919", boxShadow: "0 1px 4px #0001"
         }}>
-          Mode: <span style={{
-            background: mode === "easy" ? "#2ecc71" : "#eee", color: "#fff", borderRadius: 6, padding: "2px 8px", margin: "0 3px", fontWeight: 700 }}>Easy</span>
+          Mode: 
+          <button
+            style={{
+              background: mode === "easy" ? "#2ecc71" : "#eee",
+              color: "#fff",
+              border: "none",
+              borderRadius: 6,
+              padding: "2px 8px",
+              margin: "0 3px",
+              fontWeight: 700,
+              outline: "none",
+              cursor: mode === "easy" ? "default" : "pointer",
+              opacity: mode === "easy" ? 1 : 0.8,
+              transition: "background 0.2s"
+            }}
+            onClick={() => setMode("easy")}
+            disabled={mode === "easy"}
+          >Easy</button>
           <span style={{ color: "#aaa", margin: "0 2px" }}>/</span>
-          <span style={{
-            background: mode === "hard" ? "#a259d9" : "#eee", color: "#fff", borderRadius: 6, padding: "2px 8px", fontWeight: 700 }}>Hard</span>
+          <button
+            style={{
+              background: mode === "hard" ? "#a259d9" : "#eee",
+              color: "#fff",
+              border: "none",
+              borderRadius: 6,
+              padding: "2px 8px",
+              fontWeight: 700,
+              outline: "none",
+              cursor: mode === "hard" ? "default" : "pointer",
+              opacity: mode === "hard" ? 1 : 0.8,
+              transition: "background 0.2s"
+            }}
+            onClick={() => setMode("hard")}
+            disabled={mode === "hard"}
+          >Hard</button>
         </div>
       </div>
 
