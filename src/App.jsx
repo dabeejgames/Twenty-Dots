@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SinglePlayerApp from "./SinglePlayerApp";
 import MultiplayerApp from "./MultiplayerApp";
 import BackgroundDots from "./components/BackgroundDots";
+import TwentyDotsLogo from "./components/TwentyDotsLogo"; // <-- Import your logo
 
 function ModeSelectScreen({ onSingle, onMulti }) {
   return (
@@ -19,16 +20,7 @@ function ModeSelectScreen({ onSingle, onMulti }) {
         zIndex: 1,
       }}
     >
-      <div style={{
-        fontFamily: "'Permanent Marker', cursive",
-        fontSize: "2.4em",
-        fontWeight: 900,
-        color: "#191919",
-        textShadow: "2px 1px 0 #0003",
-        marginBottom: 18,
-      }}>
-        TWENTY DOTS
-      </div>
+      <TwentyDotsLogo style={{ fontSize: "2.4em", marginBottom: 18 }} /> {/* Use logo component */}
       <button
         onClick={onSingle}
         style={{
