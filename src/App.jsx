@@ -73,6 +73,7 @@ export default function App() {
 
   return (
     <>
+      {/* Only show background dots on game screens */}
       {screen !== "menu" && <BackgroundDots />}
       {screen === "menu" && (
         <ModeSelectScreen
