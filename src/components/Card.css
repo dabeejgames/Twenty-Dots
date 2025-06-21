@@ -3,7 +3,7 @@
   background: linear-gradient(160deg, #f8fbff 0%, #e7f1ff 100%);
   box-shadow: 0 2px 8px #284b6e28, 0 1.5px 4px #0002;
   font-weight: 700;
-  font-size: 1.14em;
+  font-size: 0.95em;         /* smaller font */
   color: #fff;
   display: flex;
   align-items: center;
@@ -13,6 +13,9 @@
   cursor: pointer;
   outline: none;
   user-select: none;
+  min-width: 32px;
+  width: 38px;               /* smaller width */
+  height: 44px;              /* smaller height */
 }
 .player-card-modern.red    { background: linear-gradient(155deg, #f66 0%, #e74c3c 93%); }
 .player-card-modern.green  { background: linear-gradient(150deg, #7fffb0 0%, #2ecc71 90%); }
@@ -22,15 +25,15 @@
 .player-card-modern:active { box-shadow: 0 4px 16px #0000002c; transform: scale(0.98); }
 
 @media (max-width: 600px) {
-  .hand {
-    max-width: 99vw;
+  .hand, .player-hand {
+    max-width: 100vw;
     overflow-x: auto !important;
     padding-right: 3vw;
   }
   .player-card-modern {
-    min-width: 34px !important;
-    width: 38px !important;
-    height: 44px !important;
-    font-size: 0.97em !important;
+    min-width: 26px !important;
+    width: 32px !important;
+    height: 38px !important;
+    font-size: 0.88em !important;
   }
 }
