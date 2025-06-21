@@ -3,13 +3,13 @@ import Board from "./components/Board";
 import PlayerArea from "./components/PlayerArea";
 import Dice from "./components/Dice";
 import TutorialModal from "./components/TutorialModal";
-import TwentyDotsLogo from "./components/TwentyDotsLogo"; // <-- NEW IMPORT
+import TwentyDotsLogo from "./components/TwentyDotsLogo";
+import CelebrationPrompt from "./components/CelebrationPrompt"; // <-- Add this import
 import { BOARD_ROWS, BOARD_COLS, BOARD_LOCATIONS, generateDeck } from "./game/constants";
 import "./App.css";
 
-// (No inline function for TwentyDotsLogo here!)
-
 // ...rest of your file...
+
 function shuffle(array) {
   return array
     .map((value) => ({ value, sort: Math.random() }))
@@ -352,6 +352,12 @@ export default function SinglePlayerApp({ onBack }) {
     }
   }, [aiResumeAfterWild, gameState, wildCellId]);
 
+  // celebration prompt close handler
+  function handleCelebrationClose() {
+    setWinner(null);
+    // Optionally: Reset the game, or bring up a menu, etc.
+  }
+
   return (
     <div className="app-root" style={{
       minHeight: "100vh",
@@ -547,6 +553,14 @@ export default function SinglePlayerApp({ onBack }) {
           }}
         />
       </div>
+
+      {/* Celebration Prompt */}
+      {winner && (
+        <CelebrationPrompt
+          winner={winner === "You" ? "You" : winner === "AI" ? "AI" : winner}
+          onClose={handleCelebrationClose}
+        />
+      )}
 
       {/* Footer */}
       <footer className="app-footer"
