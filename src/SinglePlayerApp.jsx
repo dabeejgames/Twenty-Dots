@@ -3,41 +3,13 @@ import Board from "./components/Board";
 import PlayerArea from "./components/PlayerArea";
 import Dice from "./components/Dice";
 import TutorialModal from "./components/TutorialModal";
+import TwentyDotsLogo from "./components/TwentyDotsLogo"; // <-- NEW IMPORT
 import { BOARD_ROWS, BOARD_COLS, BOARD_LOCATIONS, generateDeck } from "./game/constants";
 import "./App.css";
 
-function TwentyDotsLogo({ style }) {
-  return (
-    <div style={{ textAlign: "center", margin: "10px auto 0 auto", ...style }}>
-      <div style={{
-        fontFamily: "'Permanent Marker', 'Comic Sans MS', cursive, sans-serif",
-        fontSize: "2.0em", fontWeight: 900,
-        letterSpacing: "0.04em", color: "#191919",
-        textShadow: "2px 1px 0 #0003", lineHeight: 1.08, userSelect: "none",
-      }}>
-        TWENTY
-      </div>
-      <div style={{ display: "flex", justifyContent: "center", gap: 5, marginTop: "-0.12em" }}>
-        {["d", "o", "t", "s"].map((ch, i) => (
-          <span key={i} style={{
-            display: "inline-block",
-            width: 22, height: 22,
-            borderRadius: "50%",
-            background: ["#f03c3c", "#4bd247", "#a259d9", "#3498db"][i],
-            color: "#fff",
-            fontFamily: "'Permanent Marker', 'Comic Sans MS', cursive, sans-serif",
-            fontSize: "1em",
-            textAlign: "center",
-            lineHeight: "22px",
-            marginRight: 1,
-            boxShadow: "1px 1px 4px #0002"
-          }}>{ch}</span>
-        ))}
-      </div>
-    </div>
-  );
-}
+// (No inline function for TwentyDotsLogo here!)
 
+// ...rest of your file...
 function shuffle(array) {
   return array
     .map((value) => ({ value, sort: Math.random() }))
