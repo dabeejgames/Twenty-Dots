@@ -14,8 +14,8 @@
   outline: none;
   user-select: none;
   min-width: 18px;
-  width: 22px;
-  height: 26px;
+  width: 18px;
+  height: 22px;
 }
 .player-card-modern.red    { background: linear-gradient(155deg, #f66 0%, #e74c3c 93%); }
 .player-card-modern.green  { background: linear-gradient(150deg, #7fffb0 0%, #2ecc71 90%); }
