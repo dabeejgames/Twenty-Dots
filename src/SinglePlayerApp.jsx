@@ -569,7 +569,7 @@ export default function SinglePlayerApp({ onBack }) {
           flexShrink: 0,
         }}
       >
-        <span>Made with <span className="emoji">💡</span> by dabeejgames & Copilot</span>
+        <span>Made by dabeejgames</span>
       </footer>
     </div>
   );
