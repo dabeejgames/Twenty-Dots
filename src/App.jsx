@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import SinglePlayerApp from "./SinglePlayerApp";
 import MultiplayerApp from "./MultiplayerApp";
-import BackgroundDots from "./components/BackgroundDots"; // <<--- Add this import
+import BackgroundDots from "./components/BackgroundDots";
 
 function ModeSelectScreen({ onSingle, onMulti }) {
   return (
@@ -20,7 +20,7 @@ function ModeSelectScreen({ onSingle, onMulti }) {
       }}
     >
       <div style={{
-        fontFamily: "'Permanent Marker', 'Comic Sans MS', cursive, sans-serif",
+        fontFamily: "'Permanent Marker', cursive",
         fontSize: "2.4em",
         fontWeight: 900,
         color: "#191919",
@@ -73,7 +73,7 @@ export default function App() {
 
   return (
     <>
-      <BackgroundDots />
+      {screen !== "menu" && <BackgroundDots />}
       {screen === "menu" && (
         <ModeSelectScreen
           onSingle={() => setScreen("single")}
