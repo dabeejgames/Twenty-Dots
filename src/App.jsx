@@ -17,6 +17,7 @@ function ModeSelectScreen({ onSingle, onMulti }) {
         flexDirection: "column",
         background: "none",
         zIndex: 1,
+        position: "relative"
       }}
     >
       <div style={{
@@ -73,7 +74,7 @@ export default function App() {
 
   return (
     <>
-      {/* Only show the background on gameplay screens */}
+      {/* Show background only if not on the menu */}
       {screen !== "menu" && <BackgroundDots />}
       {screen === "menu" && (
         <ModeSelectScreen
