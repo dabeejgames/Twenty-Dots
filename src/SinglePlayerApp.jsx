@@ -107,7 +107,7 @@ export default function SinglePlayerApp({ onBack }) {
   }, []);
   const isMobile = windowSize.width < 700;
   const boardAreaHeight = isMobile ? 145 : 170; // smaller
-  const boardAreaWidth = isMobile ? 150 : 210; // smaller
+  const boardAreaWidth = isMobile ? 150 : 150; // smaller
   const cardFontSize = isMobile ? "0.85em" : "0.99em";
   const cardWidth = isMobile ? 32 : 40;
   const cardHeight = isMobile ? 36 : 46;
