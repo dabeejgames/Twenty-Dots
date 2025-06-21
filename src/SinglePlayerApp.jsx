@@ -22,7 +22,7 @@ function TwentyDotsLogo({ style }) {
         {["d", "o", "t", "s"].map((ch, i) => (
           <span key={i} style={{
             display: "inline-block",
-            width: 26, height: 26, // smaller!
+            width: 26, height: 26,
             borderRadius: "50%",
             background: ["#f03c3c", "#4bd247", "#a259d9", "#3498db"][i],
             color: "#fff",
@@ -108,7 +108,7 @@ export default function SinglePlayerApp({ onBack }) {
   const isMobile = windowSize.width < 700;
   const boardAreaHeight = isMobile ? 145 : 170; // smaller
   const boardAreaWidth = isMobile ? 190 : 210; // smaller
-  const cardFontSize = isMobile ? "0.85em" : "0.99em"; // smaller
+  const cardFontSize = isMobile ? "0.85em" : "0.99em";
   const cardWidth = isMobile ? 32 : 40;
   const cardHeight = isMobile ? 36 : 46;
 
@@ -504,22 +504,24 @@ export default function SinglePlayerApp({ onBack }) {
           display: "flex",
           flexDirection: isMobile ? "column" : "row",
           justifyContent: "center",
-          alignItems: "center",
+          alignItems: "flex-start", // Moved from "center" to "flex-start" to keep board up
           minHeight: isMobile ? 280 : 240,
           gap: isMobile ? 2 : 10,
           width: "100vw",
           overflow: "hidden"
         }}
       >
+        {/* Board is up, dice and player areas are shifted down */}
         <div
           className="board-dice-area"
           style={{
             display: "flex",
             flexDirection: isMobile ? "column" : "row",
-            alignItems: "center",
+            alignItems: "flex-start", // Board stays up
             justifyContent: "center",
             gap: isMobile ? 6 : 18,
-            margin: "-18px 0 0 0", 
+            margin: "-18px 0 0 0", // Board moved further up
+            paddingTop: 0,
             height: "100%",
             width: isMobile ? "100vw" : "auto"
           }}
@@ -531,7 +533,7 @@ export default function SinglePlayerApp({ onBack }) {
             flexShrink: 0,
             display: "flex",
             justifyContent: "center",
-            alignItems: "center",
+            alignItems: "flex-start", // Board up
             padding: 0
           }}>
             <Board
@@ -542,15 +544,15 @@ export default function SinglePlayerApp({ onBack }) {
                 width: "100%",
                 height: "100%",
               }}
-              cellSize={isMobile ? 17 : 22} // smaller!
+              cellSize={isMobile ? 17 : 22}
             />
           </div>
           <div className="dice-section" style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            minWidth: isMobile ? 50 : 70, // smaller
-            marginTop: isMobile ? 0 : 10,
+            minWidth: isMobile ? 50 : 70,
+            marginTop: isMobile ? 32 : 48, // Dice section is LOWERED
             gap: 4,
           }}>
             <Dice
@@ -615,7 +617,7 @@ export default function SinglePlayerApp({ onBack }) {
         <div
           className="player-areas-section"
           style={{
-            margin: isMobile ? "5px 0 0 0" : "0 0 0 10px",
+            margin: isMobile ? "40px 0 0 0" : "0 0 0 20px", // CARDS and score lower than board!
             width: isMobile ? "100vw" : "110px",
             minWidth: isMobile ? "98vw" : "90px",
             display: "flex",
