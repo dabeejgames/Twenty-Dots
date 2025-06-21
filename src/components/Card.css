@@ -20,3 +20,17 @@
 .player-card-modern.blue   { background: linear-gradient(150deg, #90c6ff 0%, #3498db 92%); }
 .player-card-modern.yellow { background: linear-gradient(150deg, #fffabf 0%, #f7e34e 92%); color: #715c13; }
 .player-card-modern:active { box-shadow: 0 4px 16px #0000002c; transform: scale(0.98); }
+
+@media (max-width: 600px) {
+  .player-hand, .hand {
+    max-width: 99vw;
+    overflow-x: auto !important;
+    padding-right: 3vw;
+  }
+  .player-card-modern {
+    min-width: 34px !important;
+    width: 38px !important;
+    height: 44px !important;
+    font-size: 0.97em !important;
+  }
+}
