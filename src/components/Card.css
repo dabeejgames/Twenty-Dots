@@ -3,7 +3,7 @@
   background: linear-gradient(160deg, #f8fbff 0%, #e7f1ff 100%);
   box-shadow: 0 1.5px 5px #284b6e28, 0 1px 3px #0002;
   font-weight: 700;
-  font-size: 0.7em;
+  font-size: 0.81em;
   color: #fff;
   display: flex;
   align-items: center;
@@ -13,9 +13,10 @@
   cursor: pointer;
   outline: none;
   user-select: none;
-  min-width: 18px;
-  width: 18px;
-  height: 22px;
+  min-width: 13px;
+  width: 21px;
+  height: 26px;
+  margin: 0 2px;
 }
 .player-card-modern.red    { background: linear-gradient(155deg, #f66 0%, #e74c3c 93%); }
 .player-card-modern.green  { background: linear-gradient(150deg, #7fffb0 0%, #2ecc71 90%); }
@@ -31,9 +32,9 @@
     padding-right: 3vw;
   }
   .player-card-modern {
-    min-width: 13px !important;
-    width: 20px !important;
-    height: 26px !important;
-    font-size: 0.53em !important;
+    min-width: 11px !important;
+    width: 17px !important;
+    height: 19px !important;
+    font-size: 0.66em !important;
   }
 }

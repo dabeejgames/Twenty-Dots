@@ -6,7 +6,6 @@ import TutorialModal from "./components/TutorialModal";
 import { BOARD_ROWS, BOARD_COLS, BOARD_LOCATIONS, generateDeck } from "./game/constants";
 import "./App.css";
 
-// SVG/text logo
 function TwentyDotsLogo({ style }) {
   return (
     <div style={{ textAlign: "center", margin: "10px auto 0 auto", ...style }}>
@@ -22,14 +21,14 @@ function TwentyDotsLogo({ style }) {
         {["d", "o", "t", "s"].map((ch, i) => (
           <span key={i} style={{
             display: "inline-block",
-            width: 26, height: 26,
+            width: 22, height: 22,
             borderRadius: "50%",
             background: ["#f03c3c", "#4bd247", "#a259d9", "#3498db"][i],
             color: "#fff",
             fontFamily: "'Permanent Marker', 'Comic Sans MS', cursive, sans-serif",
-            fontSize: "1.05em",
+            fontSize: "1em",
             textAlign: "center",
-            lineHeight: "26px",
+            lineHeight: "22px",
             marginRight: 1,
             boxShadow: "1px 1px 4px #0002"
           }}>{ch}</span>
@@ -106,11 +105,10 @@ export default function SinglePlayerApp({ onBack }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   const isMobile = windowSize.width < 700;
-  const boardAreaHeight = isMobile ? 145 : 170; // smaller
-  const boardAreaWidth = isMobile ? 150 : 150; // smaller
-  const cardFontSize = isMobile ? "0.85em" : "0.99em";
-  const cardWidth = isMobile ? 32 : 40;
-  const cardHeight = isMobile ? 36 : 46;
+  const boardAreaWidth = isMobile ? "97vw" : 230;
+  const cardFontSize = isMobile ? "0.81em" : "0.97em";
+  const cardWidth = isMobile ? 21 : 30;
+  const cardHeight = isMobile ? 26 : 36;
 
   // Tutorial/hints state
   const [showTutorial, setShowTutorial] = useState(() => localStorage.getItem("tdots_tutorial_seen") ? false : true);
@@ -382,297 +380,161 @@ export default function SinglePlayerApp({ onBack }) {
     }
   }, [aiResumeAfterWild, gameState, wildCellId]);
 
-  // --- SCOREBOARD ROW (closer & smaller) ---
-  function ScoreRow() {
-    return (
-      <div style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 8,
-        margin: "8px 0 2px 0"
-      }}>
-        <div style={{
-          background: "#f7faff",
-          borderRadius: 7,
-          boxShadow: "0 1.5px 4px #0001",
-          padding: "4px 10px",
-          fontWeight: 700,
-          fontSize: "0.93em",
-          color: "#2b71e7",
-          minWidth: 46,
-          textAlign: "center"
-        }}>
-          You<br />{players[0].score}
-        </div>
-        <div style={{
-          background: "#f9f6ff",
-          borderRadius: 7,
-          boxShadow: "0 1.5px 4px #0001",
-          padding: "4px 10px",
-          fontWeight: 700,
-          fontSize: "0.93em",
-          color: "#a259d9",
-          minWidth: 46,
-          textAlign: "center"
-        }}>
-          AI<br />{players[1].score}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="app-root" style={{
       minHeight: "100vh",
-      minWidth: "100vw",
-      overflow: "hidden",
+      width: "100vw",
+      background: "#e8f3fc",
       display: "flex",
       flexDirection: "column",
+      alignItems: "center",
+      padding: 0,
     }}>
-      {/* Back Button */}
-      <div style={{ position: "fixed", top: 18, left: 18, zIndex: 3000 }}>
-        <button
-          className="back-btn"
-          style={{
-            background: "#f03c3c",
-            color: "#fff",
-            border: "none",
-            borderRadius: "7px",
-            fontSize: "1.1em",
-            padding: "6px 16px",
-            fontWeight: 700,
-            cursor: "pointer",
-            boxShadow: "0 2px 8px #0002"
-          }}
-          onClick={onBack}
-        >Back</button>
+      {/* Top bar */}
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        width: "98vw",
+        maxWidth: 420,
+        padding: "4px 0 0 0",
+        marginBottom: 2,
+      }}>
+        <button style={{
+          background: "#f03c3c", color: "#fff", border: "none", borderRadius: 7,
+          fontWeight: 700, fontSize: "1em", padding: "4px 13px", margin: 0,
+          boxShadow: "0 2px 6px #0002"
+        }} onClick={onBack}>Back</button>
+        <button style={{
+          background: "#2b71e7", color: "#fff", border: "none", borderRadius: "50%",
+          width: 32, height: 32, fontWeight: 900, fontSize: "1.2em", margin: 0,
+          boxShadow: "0 2px 6px #0002"
+        }} onClick={() => setShowTutorial(true)}>?</button>
       </div>
-      {/* Tutorial Modal */}
-      <TutorialModal open={showTutorial} onClose={handleCloseTutorial} />
-      <div style={{ position: "fixed", top: 18, right: 18, zIndex: 3000 }}>
-        <button
-          aria-label="Show tutorial"
-          title="Show game tutorial"
-          style={{
-            background: "#2b71e7", color: "#fff", border: "none", borderRadius: "50%",
-            width: 38, height: 38, fontWeight: 900, fontSize: "1.6em", boxShadow: "0 2px 6px #0002", cursor: "pointer"
-          }}
-          onClick={() => setShowTutorial(true)}
-        >?</button>
-      </div>
-      <div style={{ flexShrink: 0 }}>
-        <TwentyDotsLogo />
-        {/* Scoreboards closer together and smaller */}
-        <ScoreRow />
+      <TwentyDotsLogo style={{ margin: "0 0 2px 0" }} />
+
+      {/* Scoreboard & Mode */}
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        gap: 7,
+        margin: "2px 0 0 0",
+      }}>
         <div style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-          marginBottom: 0,
+          display: "flex", flexDirection: "row", background: "#fff", borderRadius: 11,
+          boxShadow: "0 1.5px 6px #0001", overflow: "hidden",
         }}>
           <div style={{
-            marginTop: 2,
-            marginBottom: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }}>
-            <div className="mode-toggle" style={{ fontWeight: 600, fontSize: "0.95em" }}>
-              <span>Mode:</span>
-              <button
-                className={mode === "easy" ? "mode-btn active" : "mode-btn"}
-                onClick={() => setMode("easy")}
-                disabled={mode === "easy"}
-                style={{ marginLeft: 4, marginRight: 3 }}
-              >Easy</button>
-              <button
-                className={mode === "hard" ? "mode-btn active" : "mode-btn"}
-                onClick={() => setMode("hard")}
-                disabled={mode === "hard"}
-              >Hard</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Board + player areas */}
-      <div
-        style={{
-          flex: "1 0 auto",
-          display: "flex",
-          flexDirection: isMobile ? "column" : "row",
-          justifyContent: "center",
-          alignItems: "flex-start", // Moved from "center" to "flex-start" to keep board up
-          minHeight: isMobile ? 280 : 240,
-          gap: isMobile ? 2 : 10,
-          width: "100vw",
-          overflow: "hidden"
-        }}
-      >
-        {/* Board is up, dice and player areas are shifted down */}
-        <div
-          className="board-dice-area"
-          style={{
-            display: "flex",
-            flexDirection: isMobile ? "column" : "row",
-            alignItems: "flex-start", // Board stays up
-            justifyContent: "center",
-            gap: isMobile ? 6 : 18,
-            margin: "-18px 0 0 0", // Board moved further up
-            paddingTop: 0,
-            height: "100%",
-            width: isMobile ? "100vw" : "auto"
-          }}
-        >
+            padding: "3px 12px", fontWeight: 700, color: "#2b71e7", fontSize: "1em",
+            background: "#f7faff", borderRight: "1px solid #dce6f6"
+          }}>You<br/>{players[0].score}</div>
           <div style={{
-            width: boardAreaWidth,
-            height: boardAreaHeight,
-            margin: isMobile ? "0 auto" : "0",
-            flexShrink: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-start", // Board up
-            padding: 0
-          }}>
-            <Board
-              dots={dots}
-              onPlaceDot={() => { }}
-              wildCellId={wildCellId}
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-              cellSize={isMobile ? 17 : 22}
-            />
-          </div>
-          <div className="dice-section" style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            minWidth: isMobile ? 50 : 70,
-            marginTop: isMobile ? 38 : 48, // Dice section is LOWERED
-            gap: 4,
-          }}>
-            <Dice
-              letter={dice.row}
-              number={dice.col}
-              onRoll={() => handleRollDice(false)}
-              canRoll={gameState === "waiting-for-dice"}
-              style={{
-                fontSize: isMobile ? "0.98em" : "1.07em",
-                width: isMobile ? 38 : 46,
-                height: isMobile ? 22 : 27,
-              }}
-            />
-            {gameState === "waiting-for-dice" && (
-              <div className="roll-instructions" style={{
-                marginTop: 3,
-                padding: "3px 7px",
-                background: "#fffbe8",
-                borderRadius: 7,
-                color: "#b48e00",
-                fontWeight: 600,
-                fontSize: isMobile ? "0.88em" : "0.97em",
-                boxShadow: "0 1px 4px #ffe07f55",
-                textAlign: "center",
-              }}>
-                Roll for wild!
-              </div>
-            )}
-            {gameState === "game-over" && (
-              <div className="winner-banner" style={{
-                marginTop: 7,
-                padding: "6px 10px",
-                background: "#e6ffe6",
-                borderRadius: 8,
-                color: "#27ae60",
-                fontSize: isMobile ? "1em" : "1.09em",
-                fontWeight: 700,
-                boxShadow: "0 2px 8px #b6ffb688",
-                textAlign: "center",
-                letterSpacing: "1px",
-              }}>
-                {winner} wins! 🎉
-              </div>
-            )}
-            {mode === "hard" && (
-              <div style={{
-                marginTop: 3,
-                background: "#d9f7ff",
-                border: "1px solid #6bbfd2",
-                color: "#178790",
-                borderRadius: 7,
-                fontSize: isMobile ? "0.86em" : "0.94em",
-                fontWeight: 500,
-                padding: "3px 7px",
-                textAlign: "center"
-              }}>
-                <span>Collect <b>5 of each color</b> to win!</span>
-              </div>
-            )}
-          </div>
+            padding: "3px 12px", fontWeight: 700, color: "#a259d9", fontSize: "1em",
+            background: "#f9f6ff"
+          }}>AI<br/>{players[1].score}</div>
         </div>
-        <div
-          className="player-areas-section"
-          style={{
-            margin: isMobile ? "40px 0 0 0" : "0 0 0 20px", // CARDS and score lower than board!
-            width: isMobile ? "100vw" : "110px",
-            minWidth: isMobile ? "98vw" : "90px",
-            display: "flex",
-            flexDirection: isMobile ? "row" : "column",
-            justifyContent: "flex-start",
-            alignItems: "center",
-            gap: isMobile ? 7 : 10,
-          }}
-        >
-          <PlayerArea
-            player={players[0]}
-            isActive={activePlayer === 0 && gameState === "playing"}
-            onCardClick={handleCardClick}
-            showHand={true}
-            discardPiles={discardPiles[0]}
-            mode={mode}
-            cardFontSize={cardFontSize}
-            cardWidth={cardWidth}
-            cardHeight={cardHeight}
-            style={{
-              margin: isMobile ? "0 2px" : "0 0 6px 0",
-              width: isMobile ? "48vw" : "90px",
-              maxWidth: isMobile ? "49vw" : "90px",
-              flex: "1 1 auto"
-            }}
-          />
-          <PlayerArea
-            player={players[1]}
-            isActive={activePlayer === 1 && gameState === "playing"}
-            showHand={false}
-            discardPiles={discardPiles[1]}
-            isAI
-            mode={mode}
-            cardFontSize={cardFontSize}
-            cardWidth={cardWidth}
-            cardHeight={cardHeight}
-            style={{
-              margin: isMobile ? "0 2px" : "0 0 0 0",
-              width: isMobile ? "48vw" : "90px",
-              maxWidth: isMobile ? "49vw" : "90px",
-              flex: "1 1 auto"
-            }}
-          />
+        <div style={{
+          background: "#fff", borderRadius: 11, padding: "3px 8px", marginLeft: 2,
+          fontWeight: 600, fontSize: "0.93em", color: "#191919", boxShadow: "0 1px 4px #0001"
+        }}>
+          Mode: <span style={{
+            background: mode === "easy" ? "#2ecc71" : "#eee", color: "#fff", borderRadius: 6, padding: "2px 8px", margin: "0 3px", fontWeight: 700 }}>Easy</span>
+          <span style={{ color: "#aaa", margin: "0 2px" }}>/</span>
+          <span style={{
+            background: mode === "hard" ? "#a259d9" : "#eee", color: "#fff", borderRadius: 6, padding: "2px 8px", fontWeight: 700 }}>Hard</span>
         </div>
       </div>
+
+      {/* Board area */}
+      <div style={{
+        width: boardAreaWidth, maxWidth: 380, margin: "6px 0 0 0", display: "flex", flexDirection: "column", alignItems: "center"
+      }}>
+        <Board
+          dots={dots}
+          wildCellId={wildCellId}
+          cellSize={isMobile ? 17 : 22}
+          style={{
+            minWidth: 0, width: "100%", boxSizing: "border-box", margin: "0 auto"
+          }}
+        />
+        {/* Dice and instruction */}
+        <div style={{
+          display: "flex", flexDirection: "column", alignItems: "center",
+          marginTop: 5
+        }}>
+          <Dice
+            letter={dice.row}
+            number={dice.col}
+            onRoll={() => handleRollDice(false)}
+            canRoll={gameState === "waiting-for-dice"}
+            style={{
+              fontSize: "1em", width: 56, height: 30
+            }}
+          />
+          {gameState === "waiting-for-dice" && (
+            <div style={{
+              marginTop: 3, padding: "3px 10px", background: "#fffbe8",
+              borderRadius: 7, color: "#b48e00", fontWeight: 600,
+              fontSize: "0.98em", boxShadow: "0 1px 4px #ffe07f55",
+              textAlign: "center"
+            }}>
+              Roll for wild!
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Player zones */}
+      <div style={{
+        display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "flex-start",
+        gap: 8, width: "96vw", maxWidth: 380, margin: "10px 0 0 0"
+      }}>
+        <PlayerArea
+          player={players[0]}
+          isActive={activePlayer === 0 && gameState === "playing"}
+          onCardClick={handleCardClick}
+          showHand={true}
+          discardPiles={discardPiles[0]}
+          mode={mode}
+          cardFontSize={cardFontSize}
+          cardWidth={cardWidth}
+          cardHeight={cardHeight}
+          style={{
+            width: "48vw", minWidth: 0, maxWidth: 160, padding: 4, borderRadius: 12, background: "#fff",
+            boxShadow: "0 1px 4px #0001"
+          }}
+        />
+        <PlayerArea
+          player={players[1]}
+          isActive={activePlayer === 1 && gameState === "playing"}
+          showHand={false}
+          discardPiles={discardPiles[1]}
+          isAI
+          mode={mode}
+          cardFontSize={cardFontSize}
+          cardWidth={cardWidth}
+          cardHeight={cardHeight}
+          style={{
+            width: "48vw", minWidth: 0, maxWidth: 160, padding: 4, borderRadius: 12, background: "#fff",
+            boxShadow: "0 1px 4px #0001"
+          }}
+        />
+      </div>
+
+      {/* Footer */}
       <footer className="app-footer"
         style={{
           background: "#222c3c",
           color: "#fff",
           textAlign: "center",
-          padding: "7px 0 5px 0",
+          padding: "6px 0 4px 0",
           fontSize: "1em",
           letterSpacing: "1px",
-          marginTop: "auto",
-          boxShadow: "0 -2px 18px #0001",
+          marginTop: 14,
           width: "100%",
           flexShrink: 0,
         }}
