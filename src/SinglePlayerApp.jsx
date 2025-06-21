@@ -519,7 +519,7 @@ export default function SinglePlayerApp({ onBack }) {
             alignItems: "center",
             justifyContent: "center",
             gap: isMobile ? 6 : 18,
-            margin: 0,
+            margin: "-18px 0 0 0", 
             height: "100%",
             width: isMobile ? "100vw" : "auto"
           }}
