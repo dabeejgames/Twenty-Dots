@@ -86,16 +86,10 @@ export default function TutorialModal({ open, onClose }) {
               <b>Scoring:</b>
               <ul>
                 <li>
-                  <b>+1 point:</b> Replace an opponent’s colored dot with your color.
+                  <b>+1 point:</b> Replace any dot on the board (even your own or a wild) with your color.
                 </li>
                 <li>
-                  <b>+1 point:</b> Replace a yellow wild dot with your color.
-                </li>
-                <li>
-                  <b>+1 point:</b> For each opponent’s dot cleared when you make a row of 3 or more in any direction (horizontal, vertical, or diagonal).
-                </li>
-                <li>
-                  <b>+N points:</b> N = number of dots cleared if you complete a row/chain of 3+ in a line. You also get +1 for each of those dots in your color’s tally.
+                  <b>+N points:</b> For every dot cleared when you complete a row/chain of 3+ in any direction.
                 </li>
                 <li>Your score and color tallies are shown at the top.</li>
               </ul>
