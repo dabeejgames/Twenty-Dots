@@ -1,60 +1,93 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
+import { db } from "./firebase"; // Make sure you have firebase.js exporting 'db'
+import { doc, getDoc, setDoc, onSnapshot, updateDoc, arrayUnion } from "firebase/firestore";
 
-// Provide the server URL (change if deployed!)
-const SERVER_URL = "http://localhost:4000";
-
-// Context so any component can use multiplayer events/state
 const MultiplayerContext = createContext();
 
 export function MultiplayerProvider({ children }) {
-  const socketRef = useRef();
   const [connected, setConnected] = useState(false);
   const [roomId, setRoomId] = useState("");
   const [numPlayers, setNumPlayers] = useState(1);
-  const [gameActions, setGameActions] = useState([]); // history of actions
 
-  // --- Add application/game state defaults here ---
-  const [playerIndex, setPlayerIndex] = useState(0); // For demo
-  const [players, setPlayers] = useState(["Player 1", "Player 2"]);
-  const [gameState, setGameState] = useState("waiting"); // "waiting" | "playing" | etc.
-  const [boardState, setBoardState] = useState([]); // Example: [] or your actual board structure
-  const [hand, setHand] = useState([null, null, null, null, null]); // Example: 5 card hand
+  // Game state
+  const [playerIndex, setPlayerIndex] = useState(0);
+  const [players, setPlayers] = useState([]);
+  const [gameState, setGameState] = useState("waiting");
+  const [boardState, setBoardState] = useState([]);
+  const [hand, setHand] = useState([null, null, null, null, null]);
   const [activePlayer, setActivePlayer] = useState(0);
   const [winner, setWinner] = useState(null);
   const [discardPiles, setDiscardPiles] = useState([[], []]);
   const [dice, setDice] = useState([1, 2]);
   const [showTutorial, setShowTutorial] = useState(false);
 
-  // Connect to server on mount
+  // Listen to Firestore room
   useEffect(() => {
-    socketRef.current = io(SERVER_URL);
+    if (!roomId) return;
+    const roomRef = doc(db, "games", roomId);
 
-    socketRef.current.on("connect", () => setConnected(true));
-    socketRef.current.on("disconnect", () => setConnected(false));
-    socketRef.current.on("players", (count) => setNumPlayers(count));
-    socketRef.current.on("game-action", (action) => {
-      setGameActions(actions => [...actions, action]);
-      // Optionally, update other state here based on action type
+    // Subscribe to room changes
+    const unsub = onSnapshot(roomRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setConnected(true);
+        setPlayers(data.players || []);
+        setGameState(data.gameState || "waiting");
+        setBoardState(data.boardState || []);
+        setHand(data.hands ? data.hands[playerIndex] : [null, null, null, null, null]);
+        setActivePlayer(data.activePlayer || 0);
+        setWinner(data.winner || null);
+        setDiscardPiles(data.discardPiles || [[], []]);
+        setDice(data.dice || [1, 2]);
+        // Optionally: setNumPlayers(data.players ? data.players.length : 1);
+      } else {
+        setConnected(false);
+      }
     });
 
-    return () => {
-      if (socketRef.current) socketRef.current.disconnect();
-    };
-  }, []);
+    return () => unsub();
+  }, [roomId, playerIndex]);
 
-  // Join a room
-  function joinRoom(newRoomId) {
+  // Join a room or create if it doesn't exist
+  async function joinRoom(newRoomId) {
     setRoomId(newRoomId);
-    socketRef.current.emit("join-room", newRoomId);
+    const roomRef = doc(db, "games", newRoomId);
+    const docSnap = await getDoc(roomRef);
+
+    if (!docSnap.exists()) {
+      // Create the room if it doesn't exist
+      await setDoc(roomRef, {
+        players: [{ name: "Player 1" }], // Add more metadata as needed
+        gameState: "waiting",
+        boardState: [],
+        hands: [[null, null, null, null, null], [null, null, null, null, null]],
+        activePlayer: 0,
+        winner: null,
+        discardPiles: [[], []],
+        dice: [1, 2],
+      });
+      setPlayerIndex(0);
+    } else {
+      // Join as Player 2 if not already full
+      const data = docSnap.data();
+      if ((data.players || []).length < 2) {
+        await updateDoc(roomRef, {
+          players: arrayUnion({ name: "Player 2" })
+        });
+        setPlayerIndex(1);
+      } else {
+        setPlayerIndex(-1); // Room full
+      }
+    }
   }
 
-  // Send a game action to the server/room
-  function sendGameAction(action) {
-    if (roomId) {
-      socketRef.current.emit("game-action", { roomId, action });
-      setGameActions(actions => [...actions, action]);
-    }
+  // Send a game action (e.g., move)
+  async function sendGameAction(action) {
+    if (!roomId) return;
+    const roomRef = doc(db, "games", roomId);
+    // You'll need to implement how you want to store actions or update state!
+    // For example:
+    // await updateDoc(roomRef, { ...newGameStateAfterAction });
   }
 
   return (
@@ -64,8 +97,6 @@ export function MultiplayerProvider({ children }) {
       numPlayers,
       joinRoom,
       sendGameAction,
-      gameActions,
-      // --- Add all these values so your App doesn't crash ---
       playerIndex,
       players,
       gameState,
@@ -83,7 +114,6 @@ export function MultiplayerProvider({ children }) {
   );
 }
 
-// Custom hook for easy use in components
 export function useMultiplayer() {
   return useContext(MultiplayerContext);
 }

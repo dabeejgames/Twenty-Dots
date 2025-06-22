@@ -72,13 +72,11 @@ export default function TutorialModal({ open, onClose }) {
         }}>
           <b>Tip:</b> Click the <span style={{
             display: "inline-block",
-            background: "#2b71e7",
-            color: "#fff",
-            fontWeight: 600,
-            borderRadius: 5,
-            fontSize: "0.98em",
-            padding: "2px 7px"
-          }}>?</span> icon at any time for help!
+            color: "#2b71e7",
+            fontWeight: 700,
+            fontSize: "1.04em",
+            padding: "2px 4px"
+          }}>Instructions</span> tab at any time for help!
         </div>
       </div>
     </div>
