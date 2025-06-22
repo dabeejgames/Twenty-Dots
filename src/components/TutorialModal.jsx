@@ -77,8 +77,7 @@ export default function TutorialModal({ open, onClose }) {
               <ul>
                 <li>Roll the dice to light up a random <b>wild cell</b> (yellow).</li>
                 <li>
-                  Play cards matching the wild cell’s row and column.<br />
-                  (You can play up to 2 cards per turn; each must be to the current wild cell.)
+                  Play 2 cards per turn.
                 </li>
               </ul>
             </li>
