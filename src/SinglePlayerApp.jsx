@@ -384,7 +384,6 @@ export default function SinglePlayerApp({ onBack }) {
           fontWeight: 700, fontSize: "1em", padding: "4px 13px", margin: 0,
           boxShadow: "0 2px 6px #0002"
         }} onClick={onBack}>Back</button>
-        <button style={{
          <button style={{
   background: "none",
   border: "none",
