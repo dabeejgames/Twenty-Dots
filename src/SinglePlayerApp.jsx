@@ -385,10 +385,21 @@ export default function SinglePlayerApp({ onBack }) {
           boxShadow: "0 2px 6px #0002"
         }} onClick={onBack}>Back</button>
         <button style={{
-          background: "#2b71e7", color: "#fff", border: "none", borderRadius: "50%",
-          width: 32, height: 32, fontWeight: 900, fontSize: "1.2em", margin: 0,
-          boxShadow: "0 2px 6px #0002"
-        }} onClick={() => setShowTutorial(true)}>?</button>
+         <button style={{
+  background: "none",
+  border: "none",
+  color: "#2b71e7",
+  fontWeight: 700,
+  fontSize: "1.1em",
+  textDecoration: "underline",
+  cursor: "pointer",
+  padding: "4px 16px",
+  borderRadius: "8px",
+  marginRight: 2,
+  transition: "background 0.2s",
+}} onClick={() => setShowTutorial(true)}>
+  Instructions
+</button>
       </div>
       {/* Show the tutorial modal */}
       <TutorialModal open={showTutorial} onClose={handleCloseTutorial} />
