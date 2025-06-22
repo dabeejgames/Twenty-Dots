@@ -3,25 +3,35 @@ import React from "react";
 export default function TutorialModal({ open, onClose }) {
   if (!open) return null;
   return (
-    <div style={{
-      position: "fixed",
-      top: 0, left: 0, right: 0, bottom: 0,
-      background: "rgba(0,0,0,0.33)",
-      zIndex: 5000,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    }}>
-      <div style={{
-        background: "#fff",
-        borderRadius: 16,
-        boxShadow: "0 2px 20px #0005",
-        padding: "32px 24px 24px 24px",
-        maxWidth: 410,
-        width: "90vw",
-        fontFamily: "'Segoe UI', Arial, sans-serif",
-        position: "relative"
-      }}>
+    <div
+      className="tutorial-modal-overlay"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        background: "rgba(30,40,70,0.65)",
+        zIndex: 5000,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onClick={onClose}
+    >
+      <div
+        className="tutorial-modal-content"
+        style={{
+          background: "#fff",
+          borderRadius: 16,
+          maxWidth: 420,
+          width: "93vw",
+          padding: "32px 22px",
+          boxShadow: "0 8px 28px #0005",
+          position: "relative",
+        }}
+        onClick={e => e.stopPropagation()}
+      >
         <button
           onClick={onClose}
           style={{
@@ -37,39 +47,92 @@ export default function TutorialModal({ open, onClose }) {
             lineHeight: "1em"
           }}
           aria-label="Close tutorial"
-        >&times;</button>
-        <h2 style={{ fontFamily: "'Permanent Marker', cursive", color: "#2b71e7", marginTop: 0, marginBottom: 10 }}>
-          How to Play
+        >
+          &times;
+        </button>
+        <h2 style={{ marginTop: 0 }}>
+          How to Play <span role="img" aria-label="dots">🔵</span>
         </h2>
-        <ul style={{ fontSize: "1.08em", lineHeight: 1.7, paddingLeft: 20 }}>
+        <ol style={{ paddingLeft: 18, fontSize: "1.08em" }}>
           <li>
-            <b>Roll for Wild:</b> Click the <b>Roll</b> button to place a <span style={{color:"#f7e34e"}}>yellow wild</span> dot on the board.
+            <b>Objective:</b> <br />
+            <span>
+              Collect points by playing colored cards to the board. First to <b>20 points</b> (Easy) or <b>5 of each color</b> (Hard) wins!
+            </span>
           </li>
           <li>
-            <b>Play Cards:</b> Select a card from your hand to place your color dot on that cell of the board.
+            <b>On Your Turn:</b>
+            <ul>
+              <li>Roll the dice to light up a random <b>wild cell</b> (yellow).</li>
+              <li>
+                Play cards matching the wild cell’s row and column.<br />
+                (You can play up to 2 cards per turn; each must be to the current wild cell.)
+              </li>
+            </ul>
           </li>
           <li>
-            <b>Replace for Points:</b> If you replace a <b>yellow</b> wild or an opponent's dot, you gain 1 point!
+            <b>Scoring:</b>
+            <ul>
+              <li>
+                <b>+1 point:</b> Replace an opponent’s colored dot with your color.
+              </li>
+              <li>
+                <b>+1 point:</b> Replace a yellow wild dot with your color.
+              </li>
+              <li>
+                <b>+1 point:</b> For each opponent’s dot cleared when you make a row of 3 or more in any direction (horizontal, vertical, or diagonal).
+              </li>
+              <li>
+                <b>+N points:</b> N = number of dots cleared if you complete a row/chain of 3+ in a line. You also get +1 for each of those dots in your color’s tally.
+              </li>
+              <li>Your score and color tallies are shown at the top.</li>
+            </ul>
           </li>
           <li>
-            <b>Clear Rows:</b> Make a line of 3+ of your color (including yellow wilds) to clear them for extra points.
+            <b>Chain Reactions:</b>
+            <ul>
+              <li>
+                If you create or clear a row of 3+ with your move, those dots are removed and you earn points for each dot cleared.
+              </li>
+              <li>
+                If a yellow wild dot is cleared or replaced, a new wild cell will be rolled.
+              </li>
+            </ul>
           </li>
           <li>
-            <b>Win:</b> First to <b>20 points</b> (Easy) or <b>5 of each color</b> (Hard) wins!
+            <b>Winning:</b>
+            <ul>
+              <li>
+                <b>Easy Mode:</b> First to 20 points wins.
+              </li>
+              <li>
+                <b>Hard Mode:</b> Get 5 of each color (red, blue, green, purple) to win.
+              </li>
+            </ul>
           </li>
           <li>
-            <b>AI Hints:</b> If the AI replaces a yellow dot, it immediately rolls for a new wild.
+            <b>Pro Tips:</b>
+            <ul>
+              <li>
+                Try to create chains to clear as many dots as possible in one move.
+              </li>
+              <li>
+                Watch for wild (yellow) dots—they help trigger chain reactions!
+              </li>
+            </ul>
           </li>
-        </ul>
-        <div style={{
-          marginTop: 18,
-          fontSize: "0.97em",
-          color: "#555",
-          background: "#eef7ff",
-          padding: "10px 12px",
-          borderRadius: 10,
-          textAlign: "center"
-        }}>
+        </ol>
+        <div
+          style={{
+            marginTop: 18,
+            fontSize: "0.97em",
+            color: "#555",
+            background: "#eef7ff",
+            padding: "10px 12px",
+            borderRadius: 10,
+            textAlign: "center",
+          }}
+        >
           <b>Tip:</b> Click the <span style={{
             display: "inline-block",
             color: "#2b71e7",
@@ -78,6 +141,24 @@ export default function TutorialModal({ open, onClose }) {
             padding: "2px 4px"
           }}>Instructions</span> tab at any time for help!
         </div>
+        <button
+          style={{
+            marginTop: 24,
+            background: "#2b71e7",
+            color: "#fff",
+            border: "none",
+            borderRadius: 8,
+            padding: "8px 28px",
+            fontWeight: 700,
+            fontSize: "1.1em",
+            letterSpacing: "0.5px",
+            boxShadow: "0 2px 8px #0003",
+            cursor: "pointer"
+          }}
+          onClick={onClose}
+        >
+          Got it!
+        </button>
       </div>
     </div>
   );
