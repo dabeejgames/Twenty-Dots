@@ -7,6 +7,7 @@ export default function RoomJoiner({ joinRoom, connected, roomId, numPlayers }) 
     e.preventDefault();
     if (input.trim()) {
       joinRoom(input.trim());
+      setInput(""); // Clear input after joining
     }
   }
 
@@ -15,7 +16,7 @@ export default function RoomJoiner({ joinRoom, connected, roomId, numPlayers }) 
       {connected && roomId ? (
         <div>
           <span>Room ID: <b>{roomId}</b></span>
-          <span>Players: {numPlayers || 1}</span>
+          <span style={{marginLeft: 12}}>Players: {numPlayers || 1}</span>
         </div>
       ) : (
         <form onSubmit={handleJoin}>

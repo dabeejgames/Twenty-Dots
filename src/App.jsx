@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SinglePlayerApp from "./SinglePlayerApp";
 import MultiplayerApp from "./MultiplayerApp";
 import BackgroundDots from "./components/BackgroundDots";
-import TwentyDotsLogo from "./components/TwentyDotsLogo"; // <-- Import your logo
+import TwentyDotsLogo from "./components/TwentyDotsLogo";
 
 function ModeSelectScreen({ onSingle, onMulti }) {
   return (
@@ -20,7 +20,7 @@ function ModeSelectScreen({ onSingle, onMulti }) {
         zIndex: 1,
       }}
     >
-      <TwentyDotsLogo style={{ fontSize: "2.4em", marginBottom: 18 }} /> {/* Use logo component */}
+      <TwentyDotsLogo style={{ fontSize: "2.4em", marginBottom: 18 }} />
       <button
         onClick={onSingle}
         style={{
@@ -65,7 +65,6 @@ export default function App() {
 
   return (
     <>
-      {/* Only show background dots on game screens */}
       {screen !== "menu" && <BackgroundDots />}
       {screen === "menu" && (
         <ModeSelectScreen

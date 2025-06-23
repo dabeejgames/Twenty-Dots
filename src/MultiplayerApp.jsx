@@ -17,7 +17,6 @@ function GameInterface({ onBack }) {
     numPlayers,
     joinRoom,
     sendGameAction,
-    gameActions,
     playerIndex,
     players,
     gameState,
@@ -32,6 +31,16 @@ function GameInterface({ onBack }) {
   } = useMultiplayer();
 
   const [mode, setMode] = useState("easy");
+
+  // If room is full, show message
+  if (playerIndex === -1) {
+    return (
+      <div className="app-content">
+        <h2>Room is full!</h2>
+        <button className="back-btn" onClick={onBack}>Back</button>
+      </div>
+    );
+  }
 
   return (
     <div className="app-content">
