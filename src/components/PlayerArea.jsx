@@ -1,7 +1,6 @@
 import React from "react";
 import "./Card.css"; // Make sure to create/import this CSS file for modern card styles
 
-// Modern Card component
 function ModernCard({ card, width, height, fontSize, isActive, disabled }) {
   if (!card) return (
     <div
@@ -17,8 +16,6 @@ function ModernCard({ card, width, height, fontSize, isActive, disabled }) {
       }}
     />
   );
-
-  // Card color class (matches Card.css)
   const colorClass = card.color ? ` ${card.color}` : "";
   return (
     <div
@@ -41,12 +38,14 @@ function ModernCard({ card, width, height, fontSize, isActive, disabled }) {
   );
 }
 
+// player.hand and discardPiles should be arrays of cards
 export default function PlayerArea({
   player,
   isActive,
   onCardClick,
   showHand,
-  discardPiles,
+  hand = [],
+  discardPile = [],
   isAI,
   mode,
   cardFontSize = "1.1em",
@@ -77,7 +76,7 @@ export default function PlayerArea({
         color: isAI ? "#777" : "#2b71e7",
         letterSpacing: "1.5px"
       }}>
-        {player.name}
+        {player?.name}
       </div>
       {showHand && (
         <div
@@ -91,7 +90,7 @@ export default function PlayerArea({
             marginTop: 2
           }}
         >
-          {player.hand.map((card, idx) => (
+          {(hand || []).map((card, idx) => (
             <span
               key={idx}
               style={{ display: "inline-block" }}
@@ -123,8 +122,8 @@ export default function PlayerArea({
           gap: 6
         }}
       >
-        {discardPiles && discardPiles.length > 0
-          ? discardPiles.map((card, idx) => (
+        {Array.isArray(discardPile) && discardPile.length > 0
+          ? discardPile.map((card, idx) => (
             <ModernCard
               card={card}
               width={cardWidth - 14}
@@ -146,13 +145,13 @@ export default function PlayerArea({
         fontWeight: 600,
         letterSpacing: "0.5px"
       }}>
-        Score: <span style={{ color: "#2b71e7", fontWeight: 800 }}>{player.score}</span>
+        Score: <span style={{ color: "#2b71e7", fontWeight: 800 }}>{player?.score}</span>
         {mode === "hard" && (
           <span style={{ display: "block", marginTop: 2, fontSize: "0.99em" }}>
-            <span style={{ color: "#e74c3c", fontWeight: 700, marginRight: 3 }}>{player.red}</span>
-            <span style={{ color: "#3498db", fontWeight: 700, marginRight: 3 }}>{player.blue}</span>
-            <span style={{ color: "#2ecc71", fontWeight: 700, marginRight: 3 }}>{player.green}</span>
-            <span style={{ color: "#a259d9", fontWeight: 700 }}>{player.purple}</span>
+            <span style={{ color: "#e74c3c", fontWeight: 700, marginRight: 3 }}>{player?.red}</span>
+            <span style={{ color: "#3498db", fontWeight: 700, marginRight: 3 }}>{player?.blue}</span>
+            <span style={{ color: "#2ecc71", fontWeight: 700, marginRight: 3 }}>{player?.green}</span>
+            <span style={{ color: "#a259d9", fontWeight: 700 }}>{player?.purple}</span>
           </span>
         )}
       </div>

@@ -17,7 +17,7 @@ export function MultiplayerProvider({ children }) {
   const [hand, setHand] = useState([null, null, null, null, null]);
   const [activePlayer, setActivePlayer] = useState(0);
   const [winner, setWinner] = useState(null);
-  const [discardPiles, setDiscardPiles] = useState([[], []]);
+  const [discardPiles, setDiscardPiles] = useState([{ cards: [] }, { cards: [] }]);
   const [dice, setDice] = useState([1, 2]);
   const [showTutorial, setShowTutorial] = useState(false);
 
@@ -34,15 +34,32 @@ export function MultiplayerProvider({ children }) {
         setNumPlayers(Array.isArray(data.players) ? data.players.length : 1);
         setGameState(data.gameState || "waiting");
         setBoardState(data.boardState || []);
-        setHand(
-          data.hands && playerIndex >= 0 && playerIndex < data.hands.length
-            ? data.hands[playerIndex]
-            : [null, null, null, null, null]
-        );
+        // Defensive: hands as array of objects [{cards: [...]}, ...]
+        if (
+          Array.isArray(data.hands) &&
+          playerIndex >= 0 &&
+          playerIndex < data.hands.length &&
+          data.hands[playerIndex] &&
+          Array.isArray(data.hands[playerIndex].cards)
+        ) {
+          setHand(data.hands[playerIndex].cards);
+        } else {
+          setHand([null, null, null, null, null]);
+        }
         setActivePlayer(data.activePlayer ?? 0);
         setWinner(data.winner ?? null);
-        setDiscardPiles(data.discardPiles || [[], []]);
-        setDice(data.dice || [1, 2]);
+        // Defensive: discardPiles as array of objects [{cards: [...]}, ...]
+        setDiscardPiles(
+          Array.isArray(data.discardPiles) && data.discardPiles.length === 2
+            ? data.discardPiles.map(
+                (pile) =>
+                  pile && Array.isArray(pile.cards)
+                    ? pile
+                    : { cards: [] }
+              )
+            : [{ cards: [] }, { cards: [] }]
+        );
+        setDice(Array.isArray(data.dice) ? data.dice : [1, 2]);
       } else {
         setConnected(false);
       }
@@ -63,16 +80,21 @@ export function MultiplayerProvider({ children }) {
         players: [{ name: "Player 1" }],
         gameState: "waiting",
         boardState: [],
-        hands: [[null, null, null, null, null], [null, null, null, null, null]],
+        hands: [
+          { cards: [null, null, null, null, null] },
+          { cards: [null, null, null, null, null] }
+        ],
         activePlayer: 0,
         winner: null,
-        discardPiles: [[], []],
+        discardPiles: [
+          { cards: [] },
+          { cards: [] }
+        ],
         dice: [1, 2],
       });
       setPlayerIndex(0);
       setNumPlayers(1);
     } else {
-      // Join as Player 2 if not already full
       const data = docSnap.data();
       if ((data.players || []).length < 2) {
         await updateDoc(roomRef, {

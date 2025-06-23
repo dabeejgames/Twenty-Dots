@@ -35,29 +35,8 @@ function GameInterface({ onBack }) {
     setShowTutorial,
   } = useMultiplayer();
 
-  // For debugging: see all multiplayer state in the browser console
-  if (typeof window !== "undefined") {
-    window._multiplayerDebug = {
-      connected,
-      roomId,
-      numPlayers,
-      playerIndex,
-      players,
-      gameState,
-      boardState,
-      hand,
-      activePlayer,
-      winner,
-      discardPiles,
-      dice,
-    };
-    // Uncomment to log every render:
-    // console.log("Multiplayer state:", window._multiplayerDebug);
-  }
-
   const [mode, setMode] = useState("easy");
 
-  // If room is full, show message
   if (playerIndex === -1) {
     return (
       <div className="app-content">
@@ -70,7 +49,7 @@ function GameInterface({ onBack }) {
   // Defensive: Wait for critical data before rendering the game
   const safePlayers = safeArray(players, [{}, {}]);
   const safeHand = safeArray(hand, [null, null, null, null, null]);
-  const safeDiscardPiles = safeArray(discardPiles, [[], []]);
+  const safeDiscardPiles = safeArray(discardPiles, [{ cards: [] }, { cards: [] }]);
   const safeBoardState = safeArray(boardState, []);
   const safeDice = safeArray(dice, [1, 2]);
 
@@ -175,7 +154,7 @@ function GameInterface({ onBack }) {
             <PlayerArea
               player={safePlayers[0]}
               isActive={activePlayer === 0 && gameState === "playing"}
-              discardPile={safeDiscardPiles[0]}
+              discardPile={safeDiscardPiles[0]?.cards}
               mode={mode}
             />
           )}
@@ -183,7 +162,7 @@ function GameInterface({ onBack }) {
             <PlayerArea
               player={safePlayers[1]}
               isActive={activePlayer === 1 && gameState === "playing"}
-              discardPile={safeDiscardPiles[1]}
+              discardPile={safeDiscardPiles[1]?.cards}
               isAI={safePlayers[1]?.isAI}
               mode={mode}
             />
