@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { db } from "./firebase";
-import { doc, getDoc, setDoc, updateDoc, onSnapshot, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, setDocTEST, updateDoc, onSnapshot, arrayUnion } from "firebase/firestore";
 
 const MultiplayerContext = createContext();
 
@@ -19,7 +19,7 @@ export function MultiplayerProvider({ children }) {
 
     if (!docSnap.exists()) {
       // Create new room
-      await setDoc(roomRef, { players: [name], moves: [] });
+      await setDocTEST(roomRef, { players: [name], moves: [] });
       setPlayerIndex(0);
     } else {
       // Join if room not full

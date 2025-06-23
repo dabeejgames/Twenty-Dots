@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { db } from "./firebase";
-import { doc, getDoc, setDoc, onSnapshot, updateDoc, arrayUnion } from "firebase/firestore";
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import { db } from "./firebase"; // Make sure you have firebase.js exporting 'db'
+import { doc, getDoc, setDocTEST, onSnapshot, updateDoc, arrayUnion } from "firebase/firestore";
 
 const MultiplayerContext = createContext();
 
@@ -17,7 +17,7 @@ export function MultiplayerProvider({ children }) {
   const [hand, setHand] = useState([null, null, null, null, null]);
   const [activePlayer, setActivePlayer] = useState(0);
   const [winner, setWinner] = useState(null);
-  const [discardPiles, setDiscardPiles] = useState([{ cards: [] }, { cards: [] }]);
+  const [discardPiles, setDiscardPiles] = useState([[], []]);
   const [dice, setDice] = useState([1, 2]);
   const [showTutorial, setShowTutorial] = useState(false);
 
@@ -26,40 +26,20 @@ export function MultiplayerProvider({ children }) {
     if (!roomId) return;
     const roomRef = doc(db, "games", roomId);
 
+    // Subscribe to room changes
     const unsub = onSnapshot(roomRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         setConnected(true);
         setPlayers(data.players || []);
-        setNumPlayers(Array.isArray(data.players) ? data.players.length : 1);
         setGameState(data.gameState || "waiting");
         setBoardState(data.boardState || []);
-        // Defensive: hands as array of objects [{cards: [...]}, ...]
-        if (
-          Array.isArray(data.hands) &&
-          playerIndex >= 0 &&
-          playerIndex < data.hands.length &&
-          data.hands[playerIndex] &&
-          Array.isArray(data.hands[playerIndex].cards)
-        ) {
-          setHand(data.hands[playerIndex].cards);
-        } else {
-          setHand([null, null, null, null, null]);
-        }
-        setActivePlayer(data.activePlayer ?? 0);
-        setWinner(data.winner ?? null);
-        // Defensive: discardPiles as array of objects [{cards: [...]}, ...]
-        setDiscardPiles(
-          Array.isArray(data.discardPiles) && data.discardPiles.length === 2
-            ? data.discardPiles.map(
-                (pile) =>
-                  pile && Array.isArray(pile.cards)
-                    ? pile
-                    : { cards: [] }
-              )
-            : [{ cards: [] }, { cards: [] }]
-        );
-        setDice(Array.isArray(data.dice) ? data.dice : [1, 2]);
+        setHand(data.hands ? data.hands[playerIndex] : [null, null, null, null, null]);
+        setActivePlayer(data.activePlayer || 0);
+        setWinner(data.winner || null);
+        setDiscardPiles(data.discardPiles || [[], []]);
+        setDice(data.dice || [1, 2]);
+        // Optionally: setNumPlayers(data.players ? data.players.length : 1);
       } else {
         setConnected(false);
       }
@@ -76,44 +56,38 @@ export function MultiplayerProvider({ children }) {
 
     if (!docSnap.exists()) {
       // Create the room if it doesn't exist
-      await setDoc(roomRef, {
-        players: [{ name: "Player 1" }],
+      await setDocTEST(roomRef, {
+        players: [{ name: "Player 1" }], // Add more metadata as needed
         gameState: "waiting",
         boardState: [],
-        hands: [
-          { cards: [null, null, null, null, null] },
-          { cards: [null, null, null, null, null] }
-        ],
+        hands: [[null, null, null, null, null], [null, null, null, null, null]],
         activePlayer: 0,
         winner: null,
-        discardPiles: [
-          { cards: [] },
-          { cards: [] }
-        ],
+        discardPiles: [[], []],
         dice: [1, 2],
       });
       setPlayerIndex(0);
-      setNumPlayers(1);
     } else {
+      // Join as Player 2 if not already full
       const data = docSnap.data();
       if ((data.players || []).length < 2) {
         await updateDoc(roomRef, {
           players: arrayUnion({ name: "Player 2" })
         });
         setPlayerIndex(1);
-        setNumPlayers((data.players || []).length + 1);
       } else {
         setPlayerIndex(-1); // Room full
-        setNumPlayers((data.players || []).length);
       }
     }
   }
 
-  // Send a game action (to be implemented as needed)
+  // Send a game action (e.g., move)
   async function sendGameAction(action) {
     if (!roomId) return;
     const roomRef = doc(db, "games", roomId);
-    // Implement your game action logic here
+    // You'll need to implement how you want to store actions or update state!
+    // For example:
+    // await updateDoc(roomRef, { ...newGameStateAfterAction });
   }
 
   return (
