@@ -10,6 +10,11 @@ import { MultiplayerProvider, useMultiplayer } from "./MultiplayerProvider";
 import RoomJoiner from "./RoomJoiner";
 import "./App.css";
 
+// Defensive check utility
+function safeArray(arr, fallback = []) {
+  return Array.isArray(arr) ? arr : fallback;
+}
+
 function GameInterface({ onBack }) {
   const {
     connected,
@@ -30,6 +35,26 @@ function GameInterface({ onBack }) {
     setShowTutorial,
   } = useMultiplayer();
 
+  // For debugging: see all multiplayer state in the browser console
+  if (typeof window !== "undefined") {
+    window._multiplayerDebug = {
+      connected,
+      roomId,
+      numPlayers,
+      playerIndex,
+      players,
+      gameState,
+      boardState,
+      hand,
+      activePlayer,
+      winner,
+      discardPiles,
+      dice,
+    };
+    // Uncomment to log every render:
+    // console.log("Multiplayer state:", window._multiplayerDebug);
+  }
+
   const [mode, setMode] = useState("easy");
 
   // If room is full, show message
@@ -37,6 +62,35 @@ function GameInterface({ onBack }) {
     return (
       <div className="app-content">
         <h2>Room is full!</h2>
+        <button className="back-btn" onClick={onBack}>Back</button>
+      </div>
+    );
+  }
+
+  // Defensive: Wait for critical data before rendering the game
+  const safePlayers = safeArray(players, [{}, {}]);
+  const safeHand = safeArray(hand, [null, null, null, null, null]);
+  const safeDiscardPiles = safeArray(discardPiles, [[], []]);
+  const safeBoardState = safeArray(boardState, []);
+  const safeDice = safeArray(dice, [1, 2]);
+
+  if (!connected && !roomId) {
+    return (
+      <div className="app-content">
+        <RoomJoiner
+          joinRoom={joinRoom}
+          connected={connected}
+          roomId={roomId}
+          numPlayers={numPlayers}
+        />
+      </div>
+    );
+  }
+
+  if (!safePlayers.length || !safeHand.length || !safeDiscardPiles.length) {
+    return (
+      <div className="app-content">
+        <div>Loading multiplayer data...</div>
         <button className="back-btn" onClick={onBack}>Back</button>
       </div>
     );
@@ -77,12 +131,12 @@ function GameInterface({ onBack }) {
         numPlayers={numPlayers}
       />
       <div className="scoreboard-row">
-        <Scoreboard players={players} />
+        <Scoreboard players={safePlayers} />
       </div>
       <div className="game-main">
         <div className="dice-side">
           <Dice
-            dice={dice}
+            dice={safeDice}
             gameState={gameState}
             sendGameAction={sendGameAction}
             activePlayer={activePlayer}
@@ -97,7 +151,7 @@ function GameInterface({ onBack }) {
         </div>
         <div className="main-area">
           <Board
-            boardState={boardState}
+            boardState={safeBoardState}
             activePlayer={activePlayer}
             playerIndex={playerIndex}
             sendGameAction={sendGameAction}
@@ -105,7 +159,7 @@ function GameInterface({ onBack }) {
             mode={mode}
           />
           <div className="player-hand-row">
-            {(hand || []).map((card, idx) =>
+            {safeHand.map((card, idx) =>
               card ? (
                 <div key={idx} className={`player-card player-card-${card.color}`}>
                   {card.row}{card.col}
@@ -117,19 +171,23 @@ function GameInterface({ onBack }) {
           </div>
         </div>
         <div className="player-areas-section">
-          <PlayerArea
-            player={players[0]}
-            isActive={activePlayer === 0 && gameState === "playing"}
-            discardPile={discardPiles[0]}
-            mode={mode}
-          />
-          <PlayerArea
-            player={players[1]}
-            isActive={activePlayer === 1 && gameState === "playing"}
-            discardPile={discardPiles[1]}
-            isAI={players[1]?.isAI}
-            mode={mode}
-          />
+          {safePlayers[0] && (
+            <PlayerArea
+              player={safePlayers[0]}
+              isActive={activePlayer === 0 && gameState === "playing"}
+              discardPile={safeDiscardPiles[0]}
+              mode={mode}
+            />
+          )}
+          {safePlayers[1] && (
+            <PlayerArea
+              player={safePlayers[1]}
+              isActive={activePlayer === 1 && gameState === "playing"}
+              discardPile={safeDiscardPiles[1]}
+              isAI={safePlayers[1]?.isAI}
+              mode={mode}
+            />
+          )}
         </div>
       </div>
       <footer className="app-footer">
