@@ -1,10 +1,11 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database";
 
 // Your web app's Firebase configuration
 export const firebaseConfig = {
   apiKey: "AIzaSyChDHK7XGt947lqn8_sLCJynqBop6YkEh4",
   authDomain: "twenty-dots.firebaseapp.com",
+  databaseURL: "https://twenty-dots-default-rtdb.firebaseio.com/", // <-- this line is required for RTDB!
   projectId: "twenty-dots",
   storageBucket: "twenty-dots.appspot.com",
   messagingSenderId: "751012829918",
@@ -15,5 +16,5 @@ export const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore and export it
-export const db = getFirestore(app);
+// Initialize Realtime Database and export it
+export const db = getDatabase(app);

@@ -13,10 +13,10 @@ export default function RoomJoiner({ joinRoom, connected, roomId, numPlayers }) 
 
   return (
     <div className="room-joiner">
-      {connected && roomId ? (
+      {connected ? (
         <div>
           <span>Room ID: <b>{roomId}</b></span>
-          <span style={{marginLeft: 12}}>Players: {numPlayers || 1}</span>
+          <span style={{ marginLeft: 12 }}>Players: {numPlayers ?? "-"}</span>
         </div>
       ) : (
         <form onSubmit={handleJoin}>

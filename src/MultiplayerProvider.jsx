@@ -1,27 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { doc, getDoc, setDoc, onSnapshot, updateDoc, arrayUnion } from "firebase/firestore";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { db } from "./firebase";
-import MultiplayerContext from "./MultiplayerContext";
+import { ref, onValue, set, get, update } from "firebase/database";
 
-function getInitialHands() {
-  return [
-    { cards: [null, null, null, null, null] },
-    { cards: [null, null, null, null, null] }
-  ];
-}
-
-function getInitialDiscardPiles() {
-  return [
-    { cards: [] },
-    { cards: [] }
-  ];
+// Context setup
+const MultiplayerContext = createContext();
+export function useMultiplayer() {
+  return useContext(MultiplayerContext);
 }
 
 export function MultiplayerProvider({ children }) {
   const [connected, setConnected] = useState(false);
   const [roomId, setRoomId] = useState("");
-  const [numPlayers, setNumPlayers] = useState(1);
-
   const [playerIndex, setPlayerIndex] = useState(0);
   const [players, setPlayers] = useState([]);
   const [gameState, setGameState] = useState("waiting");
@@ -29,84 +18,66 @@ export function MultiplayerProvider({ children }) {
   const [hand, setHand] = useState([null, null, null, null, null]);
   const [activePlayer, setActivePlayer] = useState(0);
   const [winner, setWinner] = useState(null);
-  const [discardPiles, setDiscardPiles] = useState(getInitialDiscardPiles());
+  const [discardPiles, setDiscardPiles] = useState([[], []]);
   const [dice, setDice] = useState([1, 2]);
   const [showTutorial, setShowTutorial] = useState(false);
 
+  // Listen to RTDB room
   useEffect(() => {
     if (!roomId) return;
-    const roomRef = doc(db, "games", roomId);
-
-    const unsub = onSnapshot(roomRef, (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
+    const roomRef = ref(db, `games/${roomId}`);
+    const unsub = onValue(roomRef, (snap) => {
+      const data = snap.val();
+      if (data) {
         setConnected(true);
         setPlayers(data.players || []);
         setGameState(data.gameState || "waiting");
         setBoardState(data.boardState || []);
-        // Defensive: hands as array of objects [{cards: [...]}, ...]
-        if (
-          Array.isArray(data.hands) &&
-          playerIndex >= 0 &&
-          playerIndex < data.hands.length &&
-          data.hands[playerIndex] &&
-          Array.isArray(data.hands[playerIndex].cards)
-        ) {
-          setHand(data.hands[playerIndex].cards);
-        } else {
-          setHand([null, null, null, null, null]);
-        }
-        setActivePlayer(data.activePlayer ?? 0);
-        setWinner(data.winner ?? null);
-        // Defensive: discardPiles as array of objects [{cards: [...]}, ...]
-        setDiscardPiles(
-          Array.isArray(data.discardPiles) && data.discardPiles.length === 2
-            ? data.discardPiles.map(
-                (pile) =>
-                  pile && Array.isArray(pile.cards)
-                    ? pile
-                    : { cards: [] }
-              )
-            : getInitialDiscardPiles()
+        setHand(
+          Array.isArray(data.hands) && playerIndex >= 0 && playerIndex < data.hands.length
+            ? data.hands[playerIndex]
+            : [null, null, null, null, null]
         );
-        setDice(Array.isArray(data.dice) ? data.dice : [1, 2]);
-        setNumPlayers(Array.isArray(data.players) ? data.players.length : 1);
+        setActivePlayer(data.activePlayer || 0);
+        setWinner(data.winner || null);
+        setDiscardPiles(data.discardPiles || [[], []]);
+        setDice(data.dice || [1, 2]);
       } else {
         setConnected(false);
       }
     });
-
     return () => unsub();
   }, [roomId, playerIndex]);
 
+  // Join a room or create if it doesn't exist
   async function joinRoom(newRoomId) {
     setRoomId(newRoomId);
-    const roomRef = doc(db, "games", newRoomId);
-    const docSnap = await getDoc(roomRef);
+    const roomRef = ref(db, `games/${newRoomId}`);
+    const snap = await get(roomRef);
 
-    if (!docSnap.exists()) {
+    if (!snap.exists()) {
       // Create the room if it doesn't exist
-      const initialPlayers = [{ name: "Player 1" }];
-      const initialState = {
-        players: initialPlayers,
+      const initialData = {
+        players: [{ name: "Player 1" }],
         gameState: "waiting",
         boardState: [],
-        hands: getInitialHands(),
+        hands: [
+          [null, null, null, null, null],
+          [null, null, null, null, null]
+        ],
         activePlayer: 0,
         winner: null,
-        discardPiles: getInitialDiscardPiles(),
+        discardPiles: [[], []],
         dice: [1, 2],
       };
-      await setDoc(roomRef, initialState);
+      await set(roomRef, initialData);
       setPlayerIndex(0);
-      setPlayers(initialPlayers);
     } else {
       // Join as Player 2 if not already full
-      const data = docSnap.data();
+      const data = snap.val();
       if ((data.players || []).length < 2) {
-        await updateDoc(roomRef, {
-          players: arrayUnion({ name: "Player 2" })
-        });
+        const newPlayers = [...(data.players || []), { name: "Player 2" }];
+        await update(roomRef, { players: newPlayers });
         setPlayerIndex(1);
       } else {
         setPlayerIndex(-1); // Room full
@@ -114,18 +85,18 @@ export function MultiplayerProvider({ children }) {
     }
   }
 
+  // Send a game action (e.g., move)
   async function sendGameAction(action) {
     if (!roomId) return;
-    const roomRef = doc(db, "games", roomId);
+    const roomRef = ref(db, `games/${roomId}`);
     // Implement your game logic here!
-    // Example: await updateDoc(roomRef, { ...newGameStateAfterAction });
+    // Example: await update(roomRef, { ...newGameStateAfterAction });
   }
 
   return (
     <MultiplayerContext.Provider value={{
       connected,
       roomId,
-      numPlayers,
       joinRoom,
       sendGameAction,
       playerIndex,
