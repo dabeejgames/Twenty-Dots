@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { db } from "./firebase";
-import { doc, getDoc, setDocTEST, updateDoc, onSnapshot, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, onSnapshot, arrayUnion } from "firebase/firestore";
 
 const MultiplayerContext = createContext();
 
@@ -18,19 +18,25 @@ export function MultiplayerProvider({ children }) {
     const docSnap = await getDoc(roomRef);
 
     if (!docSnap.exists()) {
-      // Create new room
-      await setDocTEST(roomRef, { players: [name], moves: [] });
-      setPlayerIndex(0);
-    } else {
-      // Join if room not full
-      const data = docSnap.data();
-      if ((data.players || []).length < 2 && !data.players.includes(name)) {
-        await updateDoc(roomRef, { players: arrayUnion(name) });
-        setPlayerIndex(1);
-      } else {
-        alert("Room full or you already joined.");
-        setPlayerIndex(-1);
-      }
+  // Create the room if it doesn't exist
+  await setDoc(roomRef, {
+    players: [{ name: "Player 1" }],
+    gameState: "waiting",
+    boardState: [],
+    hands: [
+      { cards: [null, null, null, null, null] },
+      { cards: [null, null, null, null, null] }
+    ],
+    activePlayer: 0,
+    winner: null,
+    discardPiles: [
+      { cards: [] },
+      { cards: [] }
+    ],
+    dice: [1, 2],
+  });
+  setPlayerIndex(0);
+}
     }
     // Listen for game state
     onSnapshot(roomRef, (snap) => setGame(snap.data()));
