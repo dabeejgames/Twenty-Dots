@@ -3,7 +3,6 @@ import { doc, getDoc, setDoc, onSnapshot, updateDoc, arrayUnion } from "firebase
 import { db } from "./firebase";
 import MultiplayerContext from "./MultiplayerContext";
 
-// Helper: returns initial hand structure (array of objects, not nested arrays)
 function getInitialHands() {
   return [
     { cards: [null, null, null, null, null] },
@@ -11,7 +10,6 @@ function getInitialHands() {
   ];
 }
 
-// Helper: returns initial discard pile structure
 function getInitialDiscardPiles() {
   return [
     { cards: [] },
@@ -24,7 +22,6 @@ export function MultiplayerProvider({ children }) {
   const [roomId, setRoomId] = useState("");
   const [numPlayers, setNumPlayers] = useState(1);
 
-  // Game state
   const [playerIndex, setPlayerIndex] = useState(0);
   const [players, setPlayers] = useState([]);
   const [gameState, setGameState] = useState("waiting");
@@ -36,12 +33,10 @@ export function MultiplayerProvider({ children }) {
   const [dice, setDice] = useState([1, 2]);
   const [showTutorial, setShowTutorial] = useState(false);
 
-  // Listen to Firestore room
   useEffect(() => {
     if (!roomId) return;
     const roomRef = doc(db, "games", roomId);
 
-    // Subscribe to room changes
     const unsub = onSnapshot(roomRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -84,7 +79,6 @@ export function MultiplayerProvider({ children }) {
     return () => unsub();
   }, [roomId, playerIndex]);
 
-  // Join a room or create if it doesn't exist
   async function joinRoom(newRoomId) {
     setRoomId(newRoomId);
     const roomRef = doc(db, "games", newRoomId);
@@ -120,13 +114,11 @@ export function MultiplayerProvider({ children }) {
     }
   }
 
-  // Send a game action (e.g., move)
   async function sendGameAction(action) {
     if (!roomId) return;
     const roomRef = doc(db, "games", roomId);
-    // You'll need to implement how you want to store actions or update state!
-    // For example:
-    // await updateDoc(roomRef, { ...newGameStateAfterAction });
+    // Implement your game logic here!
+    // Example: await updateDoc(roomRef, { ...newGameStateAfterAction });
   }
 
   return (
