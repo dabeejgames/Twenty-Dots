@@ -6,7 +6,8 @@ import PlayerArea from "./components/PlayerArea";
 import Dice from "./components/Dice";
 import Scoreboard from "./components/Scoreboard";
 import TutorialModal from "./components/TutorialModal";
-import { MultiplayerProvider, useMultiplayer } from "./MultiplayerProvider";
+import { MultiplayerProvider } from "./MultiplayerProvider";
+import { useMultiplayer } from "./MultiplayerContext";
 import RoomJoiner from "./RoomJoiner";
 import "./App.css";
 
@@ -124,7 +125,8 @@ function GameInterface({ onBack }) {
           />
           {winner && (
             <div className="fancy-winner">
-              <span className="winner-text">{winner} wins! <span className="confetti-emoji" role="img" aria-label="confetti">🎉</span></span>
+              <span className="winner-text">{winner} wins! <span className="confetti-emoji" role="img" aria-label="confetti">🎉</span>
+              </span>
             </div>
           )}
         </div>
