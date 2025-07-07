@@ -1,8 +1,23 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
-import { db } from "./firebase"; // Make sure you have firebase.js exporting 'db'
+import React, { useState, useEffect } from "react";
 import { doc, getDoc, setDoc, onSnapshot, updateDoc, arrayUnion } from "firebase/firestore";
+import { db } from "./firebase";
+import MultiplayerContext from "./MultiplayerContext";
 
-const MultiplayerContext = createContext();
+// Helper: returns initial hand structure (array of objects, not nested arrays)
+function getInitialHands() {
+  return [
+    { cards: [null, null, null, null, null] },
+    { cards: [null, null, null, null, null] }
+  ];
+}
+
+// Helper: returns initial discard pile structure
+function getInitialDiscardPiles() {
+  return [
+    { cards: [] },
+    { cards: [] }
+  ];
+}
 
 export function MultiplayerProvider({ children }) {
   const [connected, setConnected] = useState(false);
@@ -17,7 +32,7 @@ export function MultiplayerProvider({ children }) {
   const [hand, setHand] = useState([null, null, null, null, null]);
   const [activePlayer, setActivePlayer] = useState(0);
   const [winner, setWinner] = useState(null);
-  const [discardPiles, setDiscardPiles] = useState([{ cards: [] }, { cards: [] }]);
+  const [discardPiles, setDiscardPiles] = useState(getInitialDiscardPiles());
   const [dice, setDice] = useState([1, 2]);
   const [showTutorial, setShowTutorial] = useState(false);
 
@@ -57,9 +72,10 @@ export function MultiplayerProvider({ children }) {
                     ? pile
                     : { cards: [] }
               )
-            : [{ cards: [] }, { cards: [] }]
+            : getInitialDiscardPiles()
         );
         setDice(Array.isArray(data.dice) ? data.dice : [1, 2]);
+        setNumPlayers(Array.isArray(data.players) ? data.players.length : 1);
       } else {
         setConnected(false);
       }
@@ -76,23 +92,20 @@ export function MultiplayerProvider({ children }) {
 
     if (!docSnap.exists()) {
       // Create the room if it doesn't exist
-      await setDoc(roomRef, {
-        players: [{ name: "Player 1" }],
+      const initialPlayers = [{ name: "Player 1" }];
+      const initialState = {
+        players: initialPlayers,
         gameState: "waiting",
         boardState: [],
-        hands: [
-          { cards: [null, null, null, null, null] },
-          { cards: [null, null, null, null, null] }
-        ],
+        hands: getInitialHands(),
         activePlayer: 0,
         winner: null,
-        discardPiles: [
-          { cards: [] },
-          { cards: [] }
-        ],
+        discardPiles: getInitialDiscardPiles(),
         dice: [1, 2],
-      });
+      };
+      await setDoc(roomRef, initialState);
       setPlayerIndex(0);
+      setPlayers(initialPlayers);
     } else {
       // Join as Player 2 if not already full
       const data = docSnap.data();
@@ -138,8 +151,4 @@ export function MultiplayerProvider({ children }) {
       {children}
     </MultiplayerContext.Provider>
   );
-}
-
-export function useMultiplayer() {
-  return useContext(MultiplayerContext);
 }
